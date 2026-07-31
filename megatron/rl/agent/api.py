@@ -72,6 +72,7 @@ class TokenRollout(AgentBaseModel):
     policy_epoch: list[list[tuple[int, int]]]
     kv_cache_epoch: list[list[tuple[int, int]]]
     num_evictions: list[int]
+    generation_cap: int | None = None
 
 
 Rollouts = list[TokenRollout | Rollout]
