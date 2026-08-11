@@ -207,6 +207,12 @@ class RolloutBank:
         self._last_checkpoint_iter = 0
         self._warned_over_cap = False
         if not os.path.exists(self._manifest_path):
+            if os.listdir(self.bank_dir):
+                raise FileNotFoundError(
+                    f"RolloutBank manifest is missing at {self._manifest_path}, but "
+                    f"{self.bank_dir} is not empty. Refusing to overwrite possible bank data; "
+                    "recover MANIFEST.json or remove the rollout-bank directory."
+                )
             self._write_manifest_atomic(
                 {
                     "format_version": _FORMAT_VERSION,
@@ -215,6 +221,8 @@ class RolloutBank:
                     "compacted_at": 0,
                 }
             )
+        # Read through the published manifest immediately, both to initialize
+        # live-size accounting and to fail closed on malformed existing state.
         self._bytes_written = self._manifest_sidecar_bytes()
         self._maybe_warn_over_cap()
 
@@ -231,14 +239,17 @@ class RolloutBank:
         try:
             with open(self._manifest_path) as f:
                 manifest = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            logger.warning(f"Manifest file not found at {self._manifest_path}; creating new one.")
-            manifest = {
-                "format_version": _FORMAT_VERSION,
-                "trained_through": 0,
-                "segments": [],
-                "compacted_at": 0,
-            }
+        except FileNotFoundError as exc:
+            raise FileNotFoundError(
+                f"RolloutBank manifest is missing at {self._manifest_path}. Refusing to continue; "
+                "recover MANIFEST.json or remove the rollout-bank directory."
+            ) from exc
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"Malformed RolloutBank manifest at {self._manifest_path}: {exc.msg} "
+                f"(line {exc.lineno}, column {exc.colno}). Refusing to continue; "
+                "recover MANIFEST.json or remove the rollout-bank directory."
+            ) from exc
         _validate_format_version(manifest, self._manifest_path)
         return manifest
 

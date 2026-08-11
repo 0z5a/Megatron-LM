@@ -169,6 +169,43 @@ class TestRoundTrip:
         with pytest.raises(ValueError, match="Unsupported RolloutBank format_version"):
             RolloutBank(str(tmp_path)).restore(0)
 
+    def test_malformed_manifest_fails_closed_without_overwrite(self, tmp_path):
+        manifest_path = tmp_path / _MANIFEST
+        malformed = '{"format_version": 1, "segments": ['
+        manifest_path.write_text(malformed)
+
+        with pytest.raises(
+            ValueError, match=r"Malformed RolloutBank manifest.*line 1, column"
+        ) as exc:
+            RolloutBank(str(tmp_path))
+
+        assert str(manifest_path) in str(exc.value)
+        assert manifest_path.read_text() == malformed
+
+    def test_missing_manifest_with_bank_artifacts_fails_without_initializing(self, tmp_path):
+        segment = tmp_path / _segment_name(3)
+        segment.mkdir()
+        ledger_path = segment / _LEDGER
+        ledger_path.write_text("existing bank data\n")
+
+        with pytest.raises(FileNotFoundError, match=r"manifest is missing.*not empty") as exc:
+            RolloutBank(str(tmp_path))
+
+        assert str(tmp_path / _MANIFEST) in str(exc.value)
+        assert not (tmp_path / _MANIFEST).exists()
+        assert ledger_path.read_text() == "existing bank data\n"
+
+    def test_manifest_removed_after_initialization_fails_without_recreating(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        manifest_path = tmp_path / _MANIFEST
+        manifest_path.unlink()
+
+        with pytest.raises(FileNotFoundError, match=r"manifest is missing") as exc:
+            bank.restore(0)
+
+        assert str(manifest_path) in str(exc.value)
+        assert not manifest_path.exists()
+
     @pytest.mark.parametrize(
         "invalid_version",
         [pytest.param(None, id="missing"), pytest.param(_FORMAT_VERSION + 1, id="unsupported")],
