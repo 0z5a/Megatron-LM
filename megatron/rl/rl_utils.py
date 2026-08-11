@@ -931,8 +931,9 @@ def get_environment_rollouts(
                     # rollback (restart at T < this step) the marker > T rule restores
                     # these; once the checkpoint advances past this step they are pruned.
                     if bank is not None:
-                        for group in rollouts:
-                            bank.mark_consumed(group.uid, args.curr_iteration)
+                        bank.mark_consumed_many(
+                            (group.uid for group in rollouts), args.curr_iteration
+                        )
                 else:
                     # Just set up space to collect the rollouts
                     rollouts = [[None for _ in range(samples_per_group)] for _ in range(n_prompts)]

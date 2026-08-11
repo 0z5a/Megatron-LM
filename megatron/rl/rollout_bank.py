@@ -48,7 +48,7 @@ import hashlib
 import json
 import logging
 import os
-from typing import Iterator, Literal, NamedTuple, NotRequired, Optional, TypedDict
+from typing import Iterable, Iterator, Literal, NamedTuple, NotRequired, Optional, TypedDict
 
 import numpy as np
 
@@ -466,7 +466,7 @@ class RolloutBank:
 
         return EncodedGroup(record, tok_bytes, lp_bytes, mask_bytes)
 
-    def mark_consumed(self, uid: str, iteration: int) -> None:
+    def mark_consumed(self, uid: str | None, iteration: int) -> None:
         """Record that ``uid`` was pulled by the trainer at ``iteration``.
 
         Markers are append-only and never deleted (a delete could not be undone;
@@ -485,12 +485,29 @@ class RolloutBank:
             consumed.log:
                 {"uid": "gen-000000/0", "iter": 100}
         """
-        if not uid:
+        self.mark_consumed_many([uid], iteration)
+
+    def mark_consumed_many(self, uids: Iterable[str | None], iteration: int) -> None:
+        """Durably record one trainer collection's consumption markers.
+
+        All non-empty ``uids`` are appended with one file open and one ``fsync``.
+        The batch is therefore durable before this method returns without paying
+        one filesystem synchronization per rollout group.
+
+        Args:
+            uids: Unique identifiers of groups pulled by the trainer.
+            iteration: The iteration number of the training.
+
+        Returns:
+            None
+        """
+        markers: list[ConsumedMarker] = [{"uid": uid, "iter": iteration} for uid in uids if uid]
+        if not markers:
             return
-        marker: ConsumedMarker = {"uid": uid, "iter": iteration}
+
         created = not os.path.exists(self._consumed_path)
         with open(self._consumed_path, "a") as f:
-            f.write(json.dumps(marker, separators=(",", ":")) + "\n")
+            f.write("".join(json.dumps(marker, separators=(",", ":")) + "\n" for marker in markers))
             f.flush()
             os.fsync(f.fileno())
         if created:

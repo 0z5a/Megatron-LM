@@ -332,18 +332,41 @@ class TestDurability:
             "manifest:2",
         ]
 
-    def test_first_consumed_marker_fsyncs_bank_directory(self, tmp_path, monkeypatch):
+    def test_consumed_marker_batch_opens_and_fsyncs_once(self, tmp_path, monkeypatch):
         bank = RolloutBank(str(tmp_path))
         events = []
+        real_open = open
+
+        def recording_open(path, mode="r", *args, **kwargs):
+            if path == bank._consumed_path:
+                events.append(f"open:{mode}")
+            return real_open(path, mode, *args, **kwargs)
+
+        monkeypatch.setattr(rollout_bank, "open", recording_open, raising=False)
         monkeypatch.setattr(os, "fsync", lambda fd: events.append("file"))
         monkeypatch.setattr(
             rollout_bank, "_fsync_directory", lambda path: events.append(f"dir:{path}")
         )
 
-        bank.mark_consumed("gen-000000/0", 1)
-        bank.mark_consumed("gen-000000/1", 1)
+        bank.mark_consumed_many(["gen-000000/0", "", "gen-000000/1"], 1)
 
-        assert events == ["file", f"dir:{tmp_path}", "file"]
+        assert events == ["open:a", "file", f"dir:{tmp_path}"]
+        markers = [json.loads(line) for line in (tmp_path / _CONSUMED).read_text().splitlines()]
+        assert markers == [{"uid": "gen-000000/0", "iter": 1}, {"uid": "gen-000000/1", "iter": 1}]
+
+        events.clear()
+        bank.mark_consumed_many(["gen-000000/2", "gen-000000/3"], 2)
+
+        assert events == ["open:a", "file"]
+
+    def test_empty_consumed_marker_batch_does_not_touch_disk(self, tmp_path, monkeypatch):
+        bank = RolloutBank(str(tmp_path))
+        monkeypatch.setattr(os, "fsync", lambda fd: pytest.fail("unexpected fsync"))
+
+        bank.mark_consumed_many([], 1)
+        bank.mark_consumed("", 1)
+
+        assert not (tmp_path / _CONSUMED).exists()
 
     def test_torn_final_ledger_line_dropped_and_append_recovers_after_restart(self, tmp_path):
         bank = RolloutBank(str(tmp_path))
