@@ -416,12 +416,12 @@ class RolloutBank:
         dumped = group.model_dump()
         dumped.pop("uid", None)  # uid lives at the top level of the record
         members = dumped.get("rollouts", [])
-        member_type = type(group.rollouts[0]).__name__ if group.rollouts else "Rollout"
-
-        # if the member type is TokenRollout and all the rollouts are token-typed, then set token_typed to True
-        token_typed = member_type == "TokenRollout" and all(
-            "trajectory" in m and m["trajectory"] and isinstance(m["trajectory"][0], list)
-            for m in members
+        token_members = [isinstance(member, TokenRollout) for member in group.rollouts]
+        if token_members and any(token_members) and not all(token_members):
+            raise ValueError("RolloutGroup must not mix TokenRollout and Rollout members")
+        token_typed = bool(token_members) and all(token_members)
+        member_type: Literal["Rollout", "TokenRollout"] = (
+            "TokenRollout" if token_typed else "Rollout"
         )
 
         if not token_typed:
@@ -694,7 +694,7 @@ class RolloutBank:
     @staticmethod
     def _read_slice(seg_dir: str, name: str, meta: Optional[SidecarMeta]) -> Optional[bytes]:
         """Return the record's sidecar bytes, or None if the slice is truncated."""
-        if not meta:
+        if not meta or meta["bytes"] == 0:
             return b""
         path = os.path.join(seg_dir, name)
         if not os.path.exists(path):

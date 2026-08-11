@@ -224,6 +224,75 @@ class TestRoundTrip:
         assert np.allclose(g.rollouts[0].logprobs[0], [-0.1, -0.2, -0.3], atol=1e-3)
         assert np.allclose(g.rollouts[1].logprobs[0], [-1.5, -2.5], atol=1e-3)
 
+    def test_empty_group_round_trip(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(0)
+        uid = bank.append(RolloutGroup(rollouts=[]))
+        bank.close()
+
+        restored = RolloutBank(str(tmp_path)).restore(0)
+        assert len(restored) == 1
+        assert restored[0].uid == uid
+        assert restored[0].rollouts == []
+
+    def test_empty_token_trajectory_round_trip_without_sidecar_files(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(0)
+        uid = bank.append(make_token_group([([], [], [])]))
+        bank.close()
+
+        segment = tmp_path / _segment_name(0)
+        assert not (segment / _TOKENS_BIN).exists()
+        record = json.loads((segment / _LEDGER).read_text())
+        assert record["kind"] == "token"
+        assert record["tok"]["bytes"] == 0
+        assert record["lp"]["bytes"] == 0
+        assert record["mask"]["bytes"] == 0
+        restored = RolloutBank(str(tmp_path)).restore(0)
+        assert len(restored) == 1
+        assert restored[0].uid == uid
+        assert isinstance(restored[0].rollouts[0], TokenRollout)
+        assert restored[0].rollouts[0].trajectory == []
+        assert restored[0].rollouts[0].logprobs == []
+        assert restored[0].rollouts[0].generation_mask == []
+
+    def test_token_rollout_subclass_uses_token_sidecars(self, tmp_path):
+        class DerivedTokenRollout(TokenRollout):
+            pass
+
+        member = DerivedTokenRollout(
+            trajectory=[[1, 2]],
+            reward=1.0,
+            logprobs=[[-0.1, -0.2]],
+            generation_mask=[[True, True]],
+            env_id="test",
+            problem_id="p",
+            policy_epoch=[[(0, 0)]],
+            kv_cache_epoch=[[(0, 0)]],
+            num_evictions=[0],
+        )
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(0)
+        uid = bank.append(RolloutGroup(rollouts=[member]))
+        bank.close()
+
+        record = json.loads((tmp_path / _segment_name(0) / _LEDGER).read_text())
+        assert record["kind"] == "token"
+        assert record["member_type"] == "TokenRollout"
+        restored = RolloutBank(str(tmp_path)).restore(0)
+        assert restored[0].uid == uid
+        assert restored[0].rollouts[0].trajectory == [[1, 2]]
+
+    def test_mixed_rollout_member_types_are_rejected(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(0)
+        mixed_group = RolloutGroup(
+            rollouts=[sample_group().rollouts[0], text_group().rollouts[0]]
+        )
+
+        with pytest.raises(ValueError, match="must not mix TokenRollout and Rollout"):
+            bank.append(mixed_group)
+
     def test_text_group_round_trip(self, tmp_path):
         bank = RolloutBank(str(tmp_path))
         bank.set_collection(1)
