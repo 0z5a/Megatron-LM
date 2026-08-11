@@ -246,7 +246,7 @@ class WeightedMultiTask(
         if override is not None:
             # Explicit per-env counts (e.g. the residual after injecting restored rollout-bank groups).
             env_ids = self._env_ids()
-            unknown = set[Any](override) - set(env_ids)
+            unknown = set(override) - set(env_ids)
             if unknown:
                 raise ValueError(
                     f"num_groups_per_env references unknown env_id(s) {sorted(unknown)}; "
