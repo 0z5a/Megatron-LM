@@ -758,6 +758,11 @@ class RolloutBank:
         # the live payload accounting instead of adding the rewritten survivors
         # on top of the segments they replaced.
         self._bytes_written = self._manifest_sidecar_bytes()
+        # Compaction establishes a new live bank footprint. Allow a future cap
+        # crossing to warn again, and warn immediately if the compacted
+        # survivors themselves still exceed the cap.
+        self._warned_over_cap = False
+        self._maybe_warn_over_cap()
 
         # Reopen the (now compacted) active segment for continued appends.
         self._collection_iter = None

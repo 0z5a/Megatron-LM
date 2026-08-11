@@ -591,6 +591,28 @@ class TestCompaction:
         # A fresh process restores the compacted survivor.
         assert len(RolloutBank(str(tmp_path)).restore(2)) == 1
 
+    def test_compaction_starts_a_new_cap_warning_epoch(self, tmp_path, monkeypatch):
+        warnings = []
+        monkeypatch.setattr(rollout_bank.logger, "warning", lambda *args: warnings.append(args))
+
+        # Each sample group has 49 bytes of sidecar payload. Three groups cross
+        # the 100-byte cap, while the sole survivor after compaction is below it.
+        bank = RolloutBank(str(tmp_path), max_bytes=100)
+        bank.set_collection(0)
+        consumed = [bank.append(sample_group()) for _ in range(2)]
+        bank.append(sample_group())
+        assert len(warnings) == 1
+
+        for uid in consumed:
+            bank.mark_consumed(uid, 1)
+        bank.checkpoint(1)
+        assert len(warnings) == 1  # The staging rewrite is not a live cap crossing.
+
+        bank.append(sample_group())
+        assert len(warnings) == 1  # 98 live bytes remains below the cap.
+        bank.append(sample_group())
+        assert len(warnings) == 2  # A later crossing starts a new warning epoch.
+
 
 class TestPipelineIntegration:
     """Write-through + restore through the real _RolloutPipeline."""
