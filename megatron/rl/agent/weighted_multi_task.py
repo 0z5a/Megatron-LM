@@ -6,7 +6,7 @@ from typing import Any, Optional, Type
 
 import numpy as np
 
-from ..types import GroupsPerEnv
+from .. import import_class
 from .api import (
     AgentBaseModel,
     ContrastiveRollout,
@@ -21,7 +21,7 @@ from .api import (
     RolloutGenerator,
     RolloutRequest,
 )
-from .registry import get_agent_class
+from ..types import GroupsPerEnv
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +69,12 @@ class WeightedMultiTask(
                 self.weights.append(0.0)
             else:
                 self.weights.append(config.weight / total_weight)
+            # Expose the normalized prompt share to the sub-agent. Curriculum
+            # cursors that seed from iteration * grpo_prompts_per_step must
+            # scale by this share: each agent only serves share * prompts_per_step
+            # groups per iteration, so seeding from the global counter skips
+            # (1 - share) of that agent's dataset every iteration.
+            agent._prompt_share = self.weights[-1]
 
     @classmethod
     def from_config(
@@ -78,7 +84,7 @@ class WeightedMultiTask(
 
         Args:
             config: List of dicts with keys:
-                - agent_type: Registered agent name (see megatron.rl.agent.registry)
+                - agent_type: String path to agent class
                 - agent_args: Dict of arguments to pass to agent constructor
                 - weight: Float weight for this agent
 
@@ -92,7 +98,8 @@ class WeightedMultiTask(
             agent_args = entry.get('agent_args', {})
             agent_args['parallel_generation_tasks'] = parallel_generation_tasks
 
-            agent_type = get_agent_class(entry['agent_type'])
+            # Import and instantiate the agent class
+            agent_type = import_class(entry['agent_type'])
             agent_configs.append(
                 AgentConfig(
                     agent_type=agent_type,
@@ -191,7 +198,7 @@ class WeightedMultiTask(
         return [rollout for rollouts in all_rollouts_lists for rollout in rollouts]
 
     def _env_ids(self) -> list[str]:
-        """Per-agent env_ids (aligned with ``self.agents``)."""
+        """Per-agent env_ids"""
         env_ids = []
         for i, (a, config) in enumerate(zip(self.agents, self.agent_configs)):
             env_id = getattr(a, "env_id", None)
@@ -214,6 +221,19 @@ class WeightedMultiTask(
         actual split identical. Counts always sum to ``total_count``
         (weight-proportional, remainder to the largest fractional parts), and
         agents that share an env_id are merged into one entry.
+
+        Example::
+
+            from examples.rl.environments.math.openmath_agent import OpenMathInstructAgent
+            from examples.rl.environments.math.bigmath_agent import BigMathAgent
+
+            # Two distinct envs (env_id "openmath_instruct" and "bigmath"),
+            # equal weight -> a 10-group batch splits evenly.
+            agent = WeightedMultiTask([
+                AgentConfig(agent_type=OpenMathInstructAgent, agent_args={}, weight=1.0),
+                AgentConfig(agent_type=BigMathAgent, agent_args={}, weight=1.0),
+            ])
+            agent.env_group_targets(10)  # {"openmath_instruct": 5, "bigmath": 5}
         """
         target: GroupsPerEnv = {}
         for eid, c in zip(self._env_ids(), self._distribute_counts(total_count)):
@@ -224,19 +244,28 @@ class WeightedMultiTask(
         """Distribute grouped rollouts across sub-agents according to weights."""
         override: GroupsPerEnv | None = request.num_groups_per_env
         if override is not None:
-            # Explicit per-env counts (e.g. the residual after injecting restored
-            # rollout-bank groups). Route each env's count to its agent(s).
+            # Explicit per-env counts (e.g. the residual after injecting restored rollout-bank groups).
             env_ids = self._env_ids()
             unknown = set[Any](override) - set(env_ids)
             if unknown:
                 raise ValueError(
                     f"num_groups_per_env references unknown env_id(s) {sorted(unknown)}; "
-                    f"known env_ids: {sorted(set(env_ids))}. Check that the envs defined "
-                    f"in this run are consistent with the restored rollouts."
+                    f"known env_ids: {sorted(set(env_ids))}. "
+                    f"Check that the envs defined in this run are consistent with the restored rollouts."
                 )
             agent_groups = [override.get(eid, 0) for eid in env_ids]
         else:
             agent_groups = self._distribute_counts(request.num_groups)
+        # In streaming mode, ensure every active (non-evaluation, non-zero-weight) agent
+        # gets a sub-generator even when num_groups < num_active_agents.  Without this,
+        # _distribute_counts(1) with 5 equal-weight envs gives [1,0,0,0,0]: only env 0
+        # ever generates rollouts, all others get None generators and are permanently skipped.
+        # Over 64 anext() calls that means 100% of rollouts come from a single env.
+        if request.streaming:
+            for i, (config, w) in enumerate(zip(self.agent_configs, self.weights)):
+                if not config.evaluation_only and w > 0 and agent_groups[i] == 0:
+                    agent_groups[i] = 1
+
         if request.submission_granularity == "B":
             # In BATCH mode, pgt counts local batches in flight. agent_groups already
             # splits each batch by weight, so copy pgt to every active agent.
@@ -247,13 +276,43 @@ class WeightedMultiTask(
         else:
             # In GROUP/ROLLOUT mode, pgt counts fine-grained work units, so split it by weight.
             agent_pgts = self._distribute_counts(self.parallel_generation_tasks)
-        if override is not None:
-            # With an explicit per-env override, slots must follow the residual
-            # shape, not a weight split of num_groups.
+            if request.streaming:
+                # Redistribute parallel_generation_tasks proportional to agent_groups,
+                # floored at agent_groups[i] so each sub-agent has at least num_groups
+                # parallel slots — required by GroupedRolloutGenerator.get_grouped_rollouts's
+                # `assert self.parallel_generation_tasks >= groups_per_worker`.
+                # Even distribution (the previous logic) fails this assertion for high-weight
+                # envs when parallel_generation_tasks is small (e.g. lag=0 + HF blend weights:
+                # parallel_generation_tasks=64 / n_active=6 → base=10, but code_gen gets
+                # num_groups=16 and 10 < 16 → assertion fails silently in the async generator,
+                # zero rollouts for that env).
+                total_active_groups = sum(g for g in agent_groups if g > 0)
+                if total_active_groups > 0:
+                    for i, g in enumerate(agent_groups):
+                        if g > 0:
+                            proportional = int(self.parallel_generation_tasks * g / total_active_groups)
+                            agent_pgts[i] = max(g, proportional)
+                        else:
+                            agent_pgts[i] = 0
+
+        # agent_slots controls how many groups each agent yields per outer-loop round.
+        # Derive it from the (possibly corrected) agent_groups so that all active agents
+        # participate each round — not just the one that got the remainder in a 1-group request.
+        # With an explicit per-env override, slots must follow the residual shape, not a
+        # weight split of num_groups (which the else-branch would recompute).
+        if override is not None or (
+            request.streaming and any(agent_groups[i] > 0 for i in range(len(agent_groups))
+                                      if not self.agent_configs[i].evaluation_only and self.weights[i] > 0)
+        ):
             raw_slots = list(agent_groups)
         else:
             raw_slots = self._distribute_counts(request.num_groups, distribute_remainder=False)
-        agent_slots = np.array(raw_slots) / np.gcd.reduce(raw_slots)
+
+        gcd_val = np.gcd.reduce(raw_slots)
+        if gcd_val == 0:
+            raw_slots = self._distribute_counts(request.num_groups)
+            gcd_val = np.gcd.reduce(raw_slots) or 1
+        agent_slots = np.array(raw_slots) / gcd_val
 
         # Snapshot the distribution for observability. Read back by rl_utils
         # during per-iteration metric logging.
@@ -280,7 +339,6 @@ class WeightedMultiTask(
             request.rollouts_per_group,
             int(sum(agent_pgts)),
         )
-
         # Create tasks for each agent with non-zero groups
         generators = []
         for agent, num_groups, pgt in zip(
