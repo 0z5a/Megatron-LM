@@ -23,6 +23,7 @@ from megatron.rl.agent.weighted_multi_task import AgentConfig, WeightedMultiTask
 from megatron.rl.rollout_bank import (
     _CONSUMED,
     _FORMAT_VERSION,
+    _GENERATIONS,
     _LEDGER,
     _MANIFEST,
     _TOKENS_BIN,
@@ -126,12 +127,22 @@ def text_group():
 def _manifest_sidecar_bytes(bank_dir):
     """Return the sidecar payload referenced by the published manifest."""
     manifest = json.loads((bank_dir / _MANIFEST).read_text())
+    generation = bank_dir / _GENERATIONS / manifest["active_generation"]
     return sum(
-        (bank_dir / seg / name).stat().st_size
+        (generation / seg / name).stat().st_size
         for seg in manifest["segments"]
         for name in ("tokens.bin", "logprobs.bin", "masks.bin")
-        if (bank_dir / seg / name).exists()
+        if (generation / seg / name).exists()
     )
+
+
+def active_generation_path(bank_dir):
+    manifest = json.loads((bank_dir / _MANIFEST).read_text())
+    return bank_dir / _GENERATIONS / manifest["active_generation"]
+
+
+def active_segment_path(bank_dir, iteration):
+    return active_generation_path(bank_dir) / _segment_name(iteration)
 
 
 class TestRoundTrip:
@@ -142,10 +153,14 @@ class TestRoundTrip:
         bank.close()
 
         manifest = json.loads((tmp_path / _MANIFEST).read_text())
-        ledger_path = tmp_path / _segment_name(3) / _LEDGER
+        ledger_path = active_segment_path(tmp_path, 3) / _LEDGER
         record = json.loads(ledger_path.read_text().splitlines()[0])
 
         assert manifest["format_version"] == _FORMAT_VERSION
+        assert manifest["timeline"]
+        assert manifest["active_generation"].startswith("generation-")
+        assert active_generation_path(tmp_path).parent == tmp_path / _GENERATIONS
+        assert (active_generation_path(tmp_path) / _CONSUMED).exists()
         assert record["format_version"] == _FORMAT_VERSION
 
     @pytest.mark.parametrize(
@@ -216,7 +231,7 @@ class TestRoundTrip:
         bank.append(sample_group())
         bank.close()
 
-        ledger_path = tmp_path / _segment_name(3) / _LEDGER
+        ledger_path = active_segment_path(tmp_path, 3) / _LEDGER
         record = json.loads(ledger_path.read_text())
         if invalid_version is None:
             record.pop("format_version")
@@ -278,7 +293,7 @@ class TestRoundTrip:
         uid = bank.append(make_token_group([([], [], [])]))
         bank.close()
 
-        segment = tmp_path / _segment_name(0)
+        segment = active_segment_path(tmp_path, 0)
         assert not (segment / _TOKENS_BIN).exists()
         record = json.loads((segment / _LEDGER).read_text())
         assert record["kind"] == "token"
@@ -313,7 +328,7 @@ class TestRoundTrip:
         uid = bank.append(RolloutGroup(rollouts=[member]))
         bank.close()
 
-        record = json.loads((tmp_path / _segment_name(0) / _LEDGER).read_text())
+        record = json.loads((active_segment_path(tmp_path, 0) / _LEDGER).read_text())
         assert record["kind"] == "token"
         assert record["member_type"] == "TokenRollout"
         restored = RolloutBank(str(tmp_path)).restore(0)
@@ -323,9 +338,7 @@ class TestRoundTrip:
     def test_mixed_rollout_member_types_are_rejected(self, tmp_path):
         bank = RolloutBank(str(tmp_path))
         bank.set_collection(0)
-        mixed_group = RolloutGroup(
-            rollouts=[sample_group().rollouts[0], text_group().rollouts[0]]
-        )
+        mixed_group = RolloutGroup(rollouts=[sample_group().rollouts[0], text_group().rollouts[0]])
 
         with pytest.raises(ValueError, match="must not mix TokenRollout and Rollout"):
             bank.append(mixed_group)
@@ -365,6 +378,18 @@ class TestRoundTrip:
 
 
 class TestDurability:
+    def test_generations_directory_is_fsynced_to_bank_parent(self, tmp_path, monkeypatch):
+        events = []
+        monkeypatch.setattr(
+            rollout_bank, "_fsync_directory", lambda path: events.append(f"dir:{path}")
+        )
+
+        RolloutBank(str(tmp_path)).close()
+
+        assert events[0] == f"dir:{tmp_path}"
+        assert f"dir:{tmp_path / _GENERATIONS}" in events
+        assert events[-1] == f"dir:{tmp_path}"
+
     def test_manifest_replace_is_followed_by_bank_directory_fsync(self, tmp_path, monkeypatch):
         bank = RolloutBank(str(tmp_path))
         events = []
@@ -386,7 +411,7 @@ class TestDurability:
     def test_first_append_fsyncs_new_entries_after_file_contents(self, tmp_path, monkeypatch):
         bank = RolloutBank(str(tmp_path))
         bank.set_collection(0)
-        segment = tmp_path / _segment_name(0)
+        segment = active_segment_path(tmp_path, 0)
         events = []
         monkeypatch.setattr(os, "fsync", lambda fd: events.append("file"))
         monkeypatch.setattr(
@@ -415,37 +440,38 @@ class TestDurability:
 
         bank.set_collection(7)
 
-        assert events == [f"dir:{tmp_path}", f"manifest:{_segment_name(7)}"]
+        generation = active_generation_path(tmp_path)
+        assert events == [f"dir:{generation}", f"manifest:{_segment_name(7)}"]
 
     def test_compacted_segment_is_durable_before_manifest_publication(self, tmp_path, monkeypatch):
         bank = RolloutBank(str(tmp_path))
         bank.set_collection(1)
+        bank.append(sample_group())
         events = []
         real_replace = os.replace
+        real_write_manifest = bank._write_manifest_atomic
 
         def replace(src, dst):
             real_replace(src, dst)
-            if str(src).endswith(".compact"):
-                events.append("segment_replace")
+            if str(src).endswith(".tmp") and "generation-" in str(src):
+                events.append("generation_replace")
+
+        def write_manifest(manifest):
+            events.append(f"manifest:{manifest['trained_through']}")
+            real_write_manifest(manifest)
 
         monkeypatch.setattr(os, "replace", replace)
         monkeypatch.setattr(
             rollout_bank, "_fsync_directory", lambda path: events.append(f"dir:{path}")
         )
-        monkeypatch.setattr(bank, "restore", lambda iteration: [])
-        monkeypatch.setattr(bank, "_rewrite_segment", lambda *args: None)
-        monkeypatch.setattr(
-            bank,
-            "_write_manifest_atomic",
-            lambda manifest: events.append(f"manifest:{manifest['trained_through']}"),
-        )
+        monkeypatch.setattr(bank, "_write_manifest_atomic", write_manifest)
 
         bank.checkpoint(2)
 
-        replace_index = events.index("segment_replace")
+        replace_index = events.index("generation_replace")
         assert events[replace_index : replace_index + 3] == [
-            "segment_replace",
-            f"dir:{tmp_path}",
+            "generation_replace",
+            f"dir:{tmp_path / _GENERATIONS}",
             "manifest:2",
         ]
 
@@ -453,9 +479,10 @@ class TestDurability:
         bank = RolloutBank(str(tmp_path))
         events = []
         real_open = open
+        consumed_path = active_generation_path(tmp_path) / _CONSUMED
 
         def recording_open(path, mode="r", *args, **kwargs):
-            if path == bank._consumed_path:
+            if path == str(consumed_path):
                 events.append(f"open:{mode}")
             return real_open(path, mode, *args, **kwargs)
 
@@ -467,8 +494,8 @@ class TestDurability:
 
         bank.mark_consumed_many(["gen-000000/0", "", "gen-000000/1"], 1)
 
-        assert events == ["open:a", "file", f"dir:{tmp_path}"]
-        markers = [json.loads(line) for line in (tmp_path / _CONSUMED).read_text().splitlines()]
+        assert events == ["open:a", "file"]
+        markers = [json.loads(line) for line in consumed_path.read_text().splitlines()]
         assert markers == [{"uid": "gen-000000/0", "iter": 1}, {"uid": "gen-000000/1", "iter": 1}]
 
         events.clear()
@@ -483,7 +510,37 @@ class TestDurability:
         bank.mark_consumed_many([], 1)
         bank.mark_consumed("", 1)
 
-        assert not (tmp_path / _CONSUMED).exists()
+        assert (active_generation_path(tmp_path) / _CONSUMED).read_text() == ""
+
+    def test_startup_removes_only_unreferenced_generation_directories(self, tmp_path):
+        RolloutBank(str(tmp_path)).close()
+        active = active_generation_path(tmp_path)
+        orphan = tmp_path / _GENERATIONS / "generation-orphan"
+        staging = tmp_path / _GENERATIONS / ".generation-interrupted.tmp"
+        unrelated = tmp_path / _GENERATIONS / "keep-me"
+        orphan.mkdir()
+        staging.mkdir()
+        unrelated.mkdir()
+
+        RolloutBank(str(tmp_path)).close()
+
+        assert active.exists()
+        assert not orphan.exists()
+        assert not staging.exists()
+        assert unrelated.exists()
+
+    def test_invalid_manifest_does_not_trigger_generation_cleanup(self, tmp_path):
+        RolloutBank(str(tmp_path)).close()
+        active = active_generation_path(tmp_path)
+        orphan = tmp_path / _GENERATIONS / "generation-orphan"
+        orphan.mkdir()
+        (tmp_path / _MANIFEST).write_text("{")
+
+        with pytest.raises(ValueError, match="Malformed RolloutBank manifest"):
+            RolloutBank(str(tmp_path))
+
+        assert active.exists()
+        assert orphan.exists()
 
     def test_torn_final_ledger_line_dropped_and_append_recovers_after_restart(self, tmp_path):
         bank = RolloutBank(str(tmp_path))
@@ -493,7 +550,7 @@ class TestDurability:
         bank.close()
 
         # Simulate a kill mid-append: a truncated JSON line at the end of the ledger.
-        ledger = os.path.join(str(tmp_path), _segment_name(0), _LEDGER)
+        ledger = active_segment_path(tmp_path, 0) / _LEDGER
         with open(ledger, "a") as f:
             f.write('{"uid": "gen-000000/2", "kind": "toke')  # torn, no newline
 
@@ -518,7 +575,7 @@ class TestDurability:
         bank.close()
 
         # Chop the tail of tokens.bin so the second record's slice is short.
-        tokens_bin = os.path.join(str(tmp_path), _segment_name(0), _TOKENS_BIN)
+        tokens_bin = active_segment_path(tmp_path, 0) / _TOKENS_BIN
         size = os.path.getsize(tokens_bin)
         with open(tokens_bin, "r+b") as f:
             f.truncate(size - 4)
@@ -532,7 +589,7 @@ class TestDurability:
         bank.append(sample_group())
         bank.close()
 
-        ledger = os.path.join(str(tmp_path), _segment_name(0), _LEDGER)
+        ledger = active_segment_path(tmp_path, 0) / _LEDGER
         with open(ledger) as f:
             rec = json.loads(f.readline())
         rec["checksum"] = "0" * 32  # tamper
@@ -607,6 +664,88 @@ class TestCompaction:
         assert bank._bytes_written == _manifest_sidecar_bytes(tmp_path)
         assert bank._bytes_written == before_compaction
 
+    def test_rollback_rebases_future_marker_into_new_timeline(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(20)
+        uid = bank.append(sample_group())
+        bank.checkpoint(20)
+        timeline_a = json.loads((tmp_path / _MANIFEST).read_text())["timeline"]
+        bank.mark_consumed(uid, 25)
+        bank.close()
+
+        restarted = RolloutBank(str(tmp_path))
+        restored = restarted.recover(20)
+        manifest = json.loads((tmp_path / _MANIFEST).read_text())
+
+        assert {group.uid for group in restored} == {uid}
+        assert manifest["timeline"] != timeline_a
+        assert (active_generation_path(tmp_path) / _CONSUMED).read_text() == ""
+
+        restarted.checkpoint(26)
+        assert {group.uid for group in restarted.restore(26)} == {uid}
+
+    def test_uninterrupted_future_marker_survives_async_checkpoint(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(20)
+        uid = bank.append(sample_group())
+        bank.mark_consumed(uid, 25)
+
+        bank.checkpoint(20)
+
+        assert {group.uid for group in bank.restore(20)} == {uid}
+        marker_lines = (active_generation_path(tmp_path) / _CONSUMED).read_text().splitlines()
+        assert [json.loads(line) for line in marker_lines] == [{"uid": uid, "iter": 25}]
+
+        bank.checkpoint(26)
+        assert bank.restore(26) == []
+
+    def test_checkpoint_compacts_markers_to_one_per_future_survivor(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(20)
+        future = bank.append(sample_group())
+        trained = bank.append(sample_group())
+        never = bank.append(sample_group())
+        bank.mark_consumed(future, 23)
+        bank.mark_consumed(future, 25)
+        bank.mark_consumed(future, 24)
+        bank.mark_consumed(trained, 18)
+        bank.mark_consumed("orphan", 30)
+
+        bank.checkpoint(20)
+
+        assert {group.uid for group in bank.restore(20)} == {future, never}
+        consumed = active_generation_path(tmp_path) / _CONSUMED
+        assert [json.loads(line) for line in consumed.read_text().splitlines()] == [
+            {"uid": future, "iter": 25}
+        ]
+
+        assert len(consumed.read_text().splitlines()) == 1
+        bank.checkpoint(20)
+        new_consumed = active_generation_path(tmp_path) / _CONSUMED
+        assert [json.loads(line) for line in new_consumed.read_text().splitlines()] == [
+            {"uid": future, "iter": 25}
+        ]
+
+    def test_failed_manifest_flip_leaves_old_generation_recoverable(self, tmp_path, monkeypatch):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(20)
+        uid = bank.append(sample_group())
+        old_manifest = json.loads((tmp_path / _MANIFEST).read_text())
+
+        def fail_manifest_flip(manifest):
+            raise OSError("simulated crash before manifest flip")
+
+        monkeypatch.setattr(bank, "_write_manifest_atomic", fail_manifest_flip)
+        with pytest.raises(OSError, match="simulated crash"):
+            bank.checkpoint(20)
+
+        assert json.loads((tmp_path / _MANIFEST).read_text()) == old_manifest
+        restarted = RolloutBank(str(tmp_path))
+        assert {group.uid for group in restarted.restore(20)} == {uid}
+        assert [path.name for path in (tmp_path / _GENERATIONS).iterdir()] == [
+            old_manifest["active_generation"]
+        ]
+
     def test_async_compaction_finalize_runs_with_captured_iteration(self, tmp_path, monkeypatch):
         bank = RolloutBank(str(tmp_path))
         monkeypatch.setattr(rl_utils, "_ROLLOUT_BANK", bank)
@@ -661,7 +800,8 @@ class TestCompaction:
         bank.set_collection(1)
         uid = bank.append(sample_group())
         bank.mark_consumed(uid, 1)
-        os.replace(tmp_path / _CONSUMED, tmp_path / _segment_name(1) / _CONSUMED)
+        generation = active_generation_path(tmp_path)
+        os.replace(generation / _CONSUMED, generation / _segment_name(1) / _CONSUMED)
 
         assert RolloutBank(str(tmp_path)).restore(1) == []
 
@@ -672,6 +812,7 @@ class TestCompaction:
         bank.mark_consumed(consumed, 1)
         bank.set_collection(2)
         survivor = bank.append(sample_group())
+        old_generation = active_generation_path(tmp_path)
 
         bank.checkpoint(2)  # trained_through=2: prune consumed(<=2), keep survivor
 
@@ -680,7 +821,7 @@ class TestCompaction:
         assert manifest["segments"] == [_segment_name(2)]
         assert manifest["compacted_at"] == 2
         # stale segment dir removed
-        assert not (tmp_path / _segment_name(1)).exists()
+        assert not old_generation.exists()
 
         restored = RolloutBank(str(tmp_path)).restore(trained_through=2)
         assert len(restored) == 1

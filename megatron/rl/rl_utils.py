@@ -840,13 +840,12 @@ def get_environment_rollouts(
             inject: GroupedRollouts = []
             residual_per_env = None  # None => default weight-proportional split
             if bank is not None:
-                bank.set_collection(args.curr_iteration)
                 agent = _get_or_create_rollout_agent(
                     args, get_rl_parallel_generation_tasks(args)
                 )
                 target = _env_targets(agent, n_prompts)
                 if not runtime_state.bank_restored:
-                    restored_groups: GroupedRollouts = bank.restore(args.iteration)
+                    restored_groups: GroupedRollouts = bank.recover(args.iteration)
                     runtime_state.restored_groups = _bucket_restored_groups(
                         restored_groups, set(target)
                     )
@@ -861,6 +860,7 @@ def get_environment_rollouts(
                             f"RolloutBank restored {total_restored_groups} completed groups from "
                             f"disk at resume iteration {args.iteration}",
                         )
+                bank.set_collection(args.curr_iteration)
                 # Only engage the balanced-injection path while there is banked work to
                 # drain (restored groups, or streaming overflow buffered earlier); the
                 # steady state is byte-for-byte the pre-bank behavior.
