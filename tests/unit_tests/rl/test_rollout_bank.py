@@ -123,6 +123,17 @@ def text_group():
     )
 
 
+def _manifest_sidecar_bytes(bank_dir):
+    """Return the sidecar payload referenced by the published manifest."""
+    manifest = json.loads((bank_dir / _MANIFEST).read_text())
+    return sum(
+        (bank_dir / seg / name).stat().st_size
+        for seg in manifest["segments"]
+        for name in ("tokens.bin", "logprobs.bin", "masks.bin")
+        if (bank_dir / seg / name).exists()
+    )
+
+
 class TestRoundTrip:
     def test_manifest_and_ledger_record_current_format_version(self, tmp_path):
         bank = RolloutBank(str(tmp_path))
@@ -444,6 +455,52 @@ class TestMarkerFilter:
 
 
 class TestCompaction:
+    def test_restart_initializes_live_payload_and_enforces_cap(self, tmp_path, caplog):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(1)
+        bank.append(sample_group())
+        bank.close()
+        live_bytes = _manifest_sidecar_bytes(tmp_path)
+
+        with caplog.at_level("WARNING", logger="megatron.rl.rollout_bank"):
+            restarted = RolloutBank(str(tmp_path), max_bytes=live_bytes - 1)
+
+        assert restarted._bytes_written == live_bytes
+        assert "exceeded --rl-rollout-bank-max-bytes" in caplog.text
+
+    def test_staging_rewrite_does_not_count_as_live_payload(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(1)
+        bank.append(sample_group())
+        live_bytes = bank._bytes_written
+        survivors = bank.restore(0)
+        staging = tmp_path / "staging"
+        staging.mkdir()
+
+        bank._rewrite_segment(str(staging), 2, survivors)
+
+        assert bank._bytes_written == live_bytes
+        assert bank._segment_sidecar_bytes(str(staging)) == live_bytes
+
+    def test_compaction_rebases_payload_to_survivors(self, tmp_path):
+        bank = RolloutBank(str(tmp_path))
+        bank.set_collection(1)
+        consumed = bank.append(sample_group())
+        bank.append(sample_group())
+        bank.mark_consumed(consumed, 1)
+        before_compaction = bank._bytes_written
+
+        bank.checkpoint(2)
+
+        survivor_bytes = _manifest_sidecar_bytes(tmp_path)
+        assert survivor_bytes * 2 == before_compaction
+        assert bank._bytes_written == survivor_bytes
+
+        bank.set_collection(3)
+        bank.append(sample_group())
+        assert bank._bytes_written == _manifest_sidecar_bytes(tmp_path)
+        assert bank._bytes_written == before_compaction
+
     def test_async_compaction_finalize_runs_with_captured_iteration(self, tmp_path, monkeypatch):
         bank = RolloutBank(str(tmp_path))
         monkeypatch.setattr(rl_utils, "_ROLLOUT_BANK", bank)

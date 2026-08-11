@@ -215,6 +215,8 @@ class RolloutBank:
                     "compacted_at": 0,
                 }
             )
+        self._bytes_written = self._manifest_sidecar_bytes()
+        self._maybe_warn_over_cap()
 
     # ------------------------------------------------------------------ paths
     @property
@@ -274,6 +276,10 @@ class RolloutBank:
         if seg not in manifest["segments"]:
             manifest["segments"].append(seg)
             self._write_manifest_atomic(manifest)
+            # A directory left behind before manifest publication was not live
+            # at startup, but becomes live when this segment is published.
+            self._bytes_written += self._segment_sidecar_bytes(self._seg_dir)
+            self._maybe_warn_over_cap()
 
     def _next_sequence(self, seg_dir: str, seg: str) -> int:
         """Return the next unused sequence number in ``seg``."""
@@ -315,6 +321,23 @@ class RolloutBank:
     def _file_size(self, name: str) -> int:
         path = os.path.join(self._seg_dir, name)
         return os.path.getsize(path) if os.path.exists(path) else 0
+
+    @staticmethod
+    def _segment_sidecar_bytes(seg_dir: str) -> int:
+        """Return the on-disk payload bytes in one segment."""
+        return sum(
+            os.path.getsize(path)
+            for name in (_TOKENS_BIN, _LOGPROBS_BIN, _MASKS_BIN)
+            if os.path.exists(path := os.path.join(seg_dir, name))
+        )
+
+    def _manifest_sidecar_bytes(self) -> int:
+        """Return payload bytes referenced by the currently published manifest."""
+        manifest = self._read_manifest()
+        return sum(
+            self._segment_sidecar_bytes(os.path.join(self.bank_dir, seg))
+            for seg in manifest["segments"]
+        )
 
     def _close_handles(self) -> None:
         for f in (self._ledger_f, self._tok_f, self._lp_f, self._mask_f):
@@ -731,6 +754,11 @@ class RolloutBank:
             if seg != new_seg:
                 _rmtree(os.path.join(self.bank_dir, seg))
 
+        # The manifest now references only the compacted survivor segment. Rebase
+        # the live payload accounting instead of adding the rewritten survivors
+        # on top of the segments they replaced.
+        self._bytes_written = self._manifest_sidecar_bytes()
+
         # Reopen the (now compacted) active segment for continued appends.
         self._collection_iter = None
         self._seg_dir = None
@@ -739,17 +767,23 @@ class RolloutBank:
 
     def _rewrite_segment(self, seg_dir: str, iteration: int, groups: list["RolloutGroup"]) -> None:
         """Write ``groups`` into ``seg_dir`` as a fresh ledger + sidecars."""
+        live_bytes = self._bytes_written
+        warned_over_cap = self._warned_over_cap
         saved = (self._seg_dir, self._collection_iter, self._seq,
                  self._tok_off, self._lp_off, self._mask_off,
                  self._ledger_f, self._tok_f, self._lp_f, self._mask_f)
         self._seg_dir, self._collection_iter, self._seq = seg_dir, iteration, 0
         self._tok_off = self._lp_off = self._mask_off = 0
         self._ledger_f = self._tok_f = self._lp_f = self._mask_f = None
+        self._bytes_written = 0
+        self._warned_over_cap = True  # staging data is not live yet
         try:
             for group in groups:
                 self.append(group, uid=group.uid)  # reuses the write-through encoder + fsync
         finally:
             self._close_handles()
+            self._bytes_written = live_bytes
+            self._warned_over_cap = warned_over_cap
             (self._seg_dir, self._collection_iter, self._seq,
              self._tok_off, self._lp_off, self._mask_off,
              self._ledger_f, self._tok_f, self._lp_f, self._mask_f) = saved
