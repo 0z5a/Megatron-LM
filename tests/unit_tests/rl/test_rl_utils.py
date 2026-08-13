@@ -1171,8 +1171,15 @@ class TestRLUtils:
         num_turns = [[42, 2], [10, 8]]
         advantages = [0, 1]
         # Per-rollout (epoch, token_count) segments, grouped by group then rollout
-        policy_epoch = [[[(4, 1), (5, 2)], [(2, 2), (3, 1)]], [[(5, 1)], [(0, 3), (1, 1)]]]
-        kv_cache_epoch = [[[(4, 2), (5, 1)], [(3, 1), (4, 2)]], [[(5, 1)], [(1, 2), (2, 2)]]]
+        seg = rl_utils.EpochSegment
+        policy_epoch_segments = [
+            [[seg(4, 1), seg(5, 2)], [seg(2, 2), seg(3, 1)]],
+            [[seg(5, 1)], [seg(0, 3), seg(1, 1)]],
+        ]
+        kv_cache_epoch_segments = [
+            [[seg(4, 2), seg(5, 1)], [seg(3, 1), seg(4, 2)]],
+            [[seg(5, 1)], [seg(1, 2), seg(2, 2)]],
+        ]
         # Per-turn max epoch stamps (when each turn completed)
         completed_epochs = [[5, 3], [5, 1]]
         num_evictions = [[0, 1], [0, 0]]
@@ -1187,7 +1194,7 @@ class TestRLUtils:
                 for group in lst:
                     group.append(sentinel)
                 lst.append([sentinel, sentinel])  # the fully failed extra group
-            for lst in (policy_epoch, kv_cache_epoch):
+            for lst in (policy_epoch_segments, kv_cache_epoch_segments):
                 for group in lst:
                     # compute_group_stats emits empty epoch rows for zero-turn placeholders
                     group.append([])
@@ -1206,8 +1213,8 @@ class TestRLUtils:
             rewards,
             num_turns,
             advantages,
-            policy_epoch=policy_epoch,
-            kv_cache_epoch=kv_cache_epoch,
+            policy_epoch_segments=policy_epoch_segments,
+            kv_cache_epoch_segments=kv_cache_epoch_segments,
             completed_epochs=completed_epochs,
             num_evictions=num_evictions,
             current_iteration=current_iteration,
@@ -1305,7 +1312,7 @@ class TestRLUtils:
         # and num_turns is what lets prep_wandb_metrics mask them downstream.
         # A zero-turn placeholder's epoch row is empty: its stamp covers no tokens.
         assert stats.num_turns == [[1, 1, 0], [0, 0, 0]]
-        assert stats.policy_epoch == [[[(5, 3)], [(6, 4)], []], [[], [], []]]
+        assert stats.policy_epoch_segments == [[[(5, 3)], [(6, 4)], []], [[], [], []]]
         assert stats.traj_lens == [[3, 4, 0], [0, 0, 0]]
         # Per-turn lists exclude placeholders entirely: no sentinel epoch-0 stamp
         # in completed_epochs, no fake 0-length turn for all-placeholder groups.
@@ -1322,8 +1329,8 @@ class TestRLUtils:
             stats.rewards,
             stats.num_turns,
             stats.advantages,
-            policy_epoch=stats.policy_epoch,
-            kv_cache_epoch=stats.kv_cache_epoch,
+            policy_epoch_segments=stats.policy_epoch_segments,
+            kv_cache_epoch_segments=stats.kv_cache_epoch_segments,
             completed_epochs=stats.completed_epochs,
             num_evictions=stats.num_evictions,
             current_iteration=7,
@@ -1337,18 +1344,21 @@ class TestRLUtils:
 
     def test_epoch_segment_helpers(self):
         expand, merge = rl_utils.expand_epoch_segments, rl_utils.merge_epoch_segments
+        seg = rl_utils.EpochSegment
         # expand: boundaries -> (epoch, token_count). Multi-turn boundaries index
         # each turn's full CUMULATIVE sequence; boundary-less turns contribute nothing.
         assert expand([[(0, 3), (4, 4)]], [6]) == [(3, 4), (4, 2)]
         assert expand([[(0, 5)], [(0, 5), (4, 6)]], [4, 7]) == [(5, 4), (5, 4), (6, 3)]
         assert expand([[], [(0, 2)]], [3, 5]) == [(2, 5)]
-        assert expand([[(0, 9)]], []) == []
+        # Per-turn lists of mismatched lengths raise instead of silently dropping turns.
+        with pytest.raises(ValueError):
+            expand([[(0, 9)]], [])
         # merge: (policy, kv, token_count) runs aligned by token position, not an
         # index-wise zip of the two segment lists; a tail covered by only one
         # stream (disagreeing totals) is dropped rather than misattributed.
-        assert list(merge([(10, 4)], [(9, 2), (8, 2)])) == [(10, 9, 2), (10, 8, 2)]
-        assert list(merge([(7, 3)], [(6, 1)])) == [(7, 6, 1)]
-        assert list(merge([], [(1, 2)])) == []
+        assert list(merge([seg(10, 4)], [seg(9, 2), seg(8, 2)])) == [(10, 9, 2), (10, 8, 2)]
+        assert list(merge([seg(7, 3)], [seg(6, 1)])) == [(7, 6, 1)]
+        assert list(merge([], [seg(1, 2)])) == []
 
     def test_per_token_staleness_is_token_weighted(self):
         # One turn, 10 tokens: 9 at epoch 1 + 1 at epoch 5. Per-segment accounting
@@ -1366,8 +1376,8 @@ class TestRLUtils:
             num_evictions=[0],
         )
         stats = rl_utils.compute_group_stats([[rollout]], MockTokenizer(), seq_len=16)
-        assert stats.policy_epoch == [[[(1, 9), (5, 1)]]]
-        assert stats.kv_cache_epoch == [[[(5, 10)]]]
+        assert stats.policy_epoch_segments == [[[(1, 9), (5, 1)]]]
+        assert stats.kv_cache_epoch_segments == [[[(5, 10)]]]
 
         writer = MagicMock()
         metrics = rl_utils.prep_wandb_metrics(
@@ -1377,8 +1387,8 @@ class TestRLUtils:
             stats.rewards,
             stats.num_turns,
             stats.advantages,
-            policy_epoch=stats.policy_epoch,
-            kv_cache_epoch=stats.kv_cache_epoch,
+            policy_epoch_segments=stats.policy_epoch_segments,
+            kv_cache_epoch_segments=stats.kv_cache_epoch_segments,
             completed_epochs=stats.completed_epochs,
             num_evictions=stats.num_evictions,
             current_iteration=6,

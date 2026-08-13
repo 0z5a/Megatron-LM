@@ -14,7 +14,7 @@ from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, Dict, Iterator, List, NamedTuple, Optional, TypeAlias
 
 import numpy as np
 import torch
@@ -64,6 +64,7 @@ from megatron.rl.agent.api import (
     GroupedRollouts,
     RewardEvaluationResult,
     Rollout,
+    RolloutEpochBoundaries,
     RolloutGroup,
     TokenRollout,
 )
@@ -270,6 +271,28 @@ def verify_model_weights_swap(
 
 
 
+class EpochSegment(NamedTuple):
+    """A run of `token_count` consecutive tokens sharing one epoch."""
+
+    epoch: int
+    token_count: int
+
+
+class AlignedEpochSegment(NamedTuple):
+    """A run of `token_count` tokens whose policy and KV-cache epochs are both constant."""
+
+    policy_epoch: int
+    kv_cache_epoch: int
+    token_count: int
+
+
+RolloutEpochSegments: TypeAlias = list[EpochSegment]
+"""One rollout's (epoch, token_count) segments, covering its trajectory in order."""
+
+GroupedEpochSegments: TypeAlias = list[list[RolloutEpochSegments]]
+"""Per-group, per-rollout epoch segments."""
+
+
 @dataclass(slots=True)
 class RolloutStats:
     rewards: list[list[float]] # inner list is for a group
@@ -287,8 +310,8 @@ class RolloutStats:
     min_inf_prob: None | float
     max_inf_prob: None | float
     mean_inf_prob: None | float
-    policy_epoch: list[list[tuple[int, int]]]
-    kv_cache_epoch: list[list[tuple[int, int]]]
+    policy_epoch_segments: GroupedEpochSegments
+    kv_cache_epoch_segments: GroupedEpochSegments
     completed_epochs: list[list[int]]
     num_evictions: list[list[int]]
 
@@ -859,42 +882,46 @@ def calculate_grpo_advantages(rewards: list[list[float]], num_turns: list[list[i
 
 
 def expand_epoch_segments(
-    per_turn_boundaries: list[list[tuple[int, int]]],
+    per_turn_boundaries: RolloutEpochBoundaries,
     per_turn_token_counts: list[int],
-) -> list[tuple[int, int]]:
+) -> RolloutEpochSegments:
     """Expand RLE (start_token_index, epoch) boundaries into (epoch, token_count) segments."""
-    segments: list[tuple[int, int]] = []
-    for boundaries, total_len in zip(per_turn_boundaries, per_turn_token_counts):
+    segments: RolloutEpochSegments = []
+    for boundaries, total_len in zip(per_turn_boundaries, per_turn_token_counts, strict=True):
         if not boundaries:
             continue
         for idx, (start, epoch) in enumerate(boundaries):
             end = boundaries[idx + 1][0] if idx + 1 < len(boundaries) else total_len
             count = end - start
             if count > 0:
-                segments.append((epoch, count))
+                segments.append(EpochSegment(epoch=epoch, token_count=count))
     return segments
 
 
 def merge_epoch_segments(
-    policy_segments: list[tuple[int, int]], kv_segments: list[tuple[int, int]]
-) -> Iterator[tuple[int, int, int]]:
+    policy_segments: RolloutEpochSegments, kv_segments: RolloutEpochSegments
+) -> Iterator[AlignedEpochSegment]:
     """Yield (policy_epoch, kv_cache_epoch, token_count) runs over shared token positions."""
     pol_idx = kv_idx = 0
-    pol_left = policy_segments[0][1] if policy_segments else 0
-    kv_left = kv_segments[0][1] if kv_segments else 0
+    pol_left = policy_segments[0].token_count if policy_segments else 0
+    kv_left = kv_segments[0].token_count if kv_segments else 0
     while pol_idx < len(policy_segments) and kv_idx < len(kv_segments):
         take = min(pol_left, kv_left)
-        yield (policy_segments[pol_idx][0], kv_segments[kv_idx][0], take)
+        yield AlignedEpochSegment(
+            policy_epoch=policy_segments[pol_idx].epoch,
+            kv_cache_epoch=kv_segments[kv_idx].epoch,
+            token_count=take,
+        )
         pol_left -= take
         kv_left -= take
         if pol_left == 0:
             pol_idx += 1
             if pol_idx < len(policy_segments):
-                pol_left = policy_segments[pol_idx][1]
+                pol_left = policy_segments[pol_idx].token_count
         if kv_left == 0:
             kv_idx += 1
             if kv_idx < len(kv_segments):
-                kv_left = kv_segments[kv_idx][1]
+                kv_left = kv_segments[kv_idx].token_count
 
 
 def compute_group_stats(
@@ -919,8 +946,8 @@ def compute_group_stats(
     env_ids = []
     group_reward_ids = []
     num_turns = [] # num_turns per traj
-    all_policy_epoch = []
-    all_kv_cache_epoch = []
+    all_policy_epoch_segments = []
+    all_kv_cache_epoch_segments = []
     all_completed_epochs = []
     all_num_evictions = []
     for group in rollouts:
@@ -928,8 +955,8 @@ def compute_group_stats(
         group_traj_lengths = []
         group_turn_lengths = []
         group_num_turns = []
-        group_policy_epoch = []
-        group_kv_epoch = []
+        group_policy_epoch_segments = []
+        group_kv_epoch_segments = []
         group_completed_epochs = []
         group_num_evictions = []
         for rollout in group:
@@ -973,29 +1000,42 @@ def compute_group_stats(
             assert rollout.policy_epoch, "Rollout has no policy_epoch data"
             assert rollout.kv_cache_epoch, "Rollout has no kv_cache_epoch data"
             if isinstance(rollout, TokenRollout):
-                cumulative_turn_lens = [len(t) for t in rollout.trajectory]
-                group_policy_epoch.append(
-                    expand_epoch_segments(rollout.policy_epoch, cumulative_turn_lens)
-                )
-                group_kv_epoch.append(
-                    expand_epoch_segments(rollout.kv_cache_epoch, cumulative_turn_lens)
-                )
+                if rollout.trajectory:
+                    cumulative_turn_lens = [len(t) for t in rollout.trajectory]
+                    group_policy_epoch_segments.append(
+                        expand_epoch_segments(rollout.policy_epoch, cumulative_turn_lens)
+                    )
+                    group_kv_epoch_segments.append(
+                        expand_epoch_segments(rollout.kv_cache_epoch, cumulative_turn_lens)
+                    )
+                else:
+                    # Zero-turn placeholders carry a sentinel epoch stamp covering no tokens.
+                    group_policy_epoch_segments.append([])
+                    group_kv_epoch_segments.append([])
             else:
                 # Text rollouts carry no token counts; weight each segment once.
-                group_policy_epoch.append(
-                    [(epoch, 1) for turn in rollout.policy_epoch for _, epoch in turn]
+                group_policy_epoch_segments.append(
+                    [
+                        EpochSegment(epoch=boundary.epoch, token_count=1)
+                        for turn in rollout.policy_epoch
+                        for boundary in turn
+                    ]
                 )
-                group_kv_epoch.append(
-                    [(epoch, 1) for turn in rollout.kv_cache_epoch for _, epoch in turn]
+                group_kv_epoch_segments.append(
+                    [
+                        EpochSegment(epoch=boundary.epoch, token_count=1)
+                        for turn in rollout.kv_cache_epoch
+                        for boundary in turn
+                    ]
                 )
             # completed_epochs is per-turn, so it cannot be masked per-rollout downstream
             if rollout.trajectory:
                 group_completed_epochs.extend(
-                    turn[-1][1] for turn in rollout.policy_epoch
+                    turn[-1].epoch for turn in rollout.policy_epoch
                 )
             group_num_evictions.append(sum(rollout.num_evictions))
-        all_policy_epoch.append(group_policy_epoch)
-        all_kv_cache_epoch.append(group_kv_epoch)
+        all_policy_epoch_segments.append(group_policy_epoch_segments)
+        all_kv_cache_epoch_segments.append(group_kv_epoch_segments)
         all_completed_epochs.append(group_completed_epochs)
         all_num_evictions.append(group_num_evictions)
         traj_lens.append(group_traj_lengths)
@@ -1025,8 +1065,8 @@ def compute_group_stats(
         min_inf_prob=None,
         max_inf_prob=None,
         mean_inf_prob=None,
-        policy_epoch=all_policy_epoch,
-        kv_cache_epoch=all_kv_cache_epoch,
+        policy_epoch_segments=all_policy_epoch_segments,
+        kv_cache_epoch_segments=all_kv_cache_epoch_segments,
         completed_epochs=all_completed_epochs,
         num_evictions=all_num_evictions,
     )
@@ -1041,8 +1081,8 @@ def prep_wandb_metrics(
         rewards: List[List[float]],
         num_turns: List[List[int]],
         advantages: List[float],
-        policy_epoch: List[List[List[int]]],
-        kv_cache_epoch: List[List[List[int]]],
+        policy_epoch_segments: GroupedEpochSegments,
+        kv_cache_epoch_segments: GroupedEpochSegments,
         completed_epochs: List[List[int]],
         num_evictions: List[List[int]],
         current_iteration: int,
@@ -1064,8 +1104,8 @@ def prep_wandb_metrics(
         rewards: Grouped list of rewards.
         num_turns: Grouped list of number of turns in the trajectories. Zero means failure.
         advantages: Flattened list of advantages.
-        policy_epoch: Grouped list of per-rollout (epoch, token_count) segments.
-        kv_cache_epoch: Grouped list of per-rollout (epoch, token_count) segments.
+        policy_epoch_segments: Grouped list of per-rollout (epoch, token_count) segments.
+        kv_cache_epoch_segments: Grouped list of per-rollout (epoch, token_count) segments.
         completed_epochs: Grouped list of per-turn max policy epoch stamps.
         num_evictions: Grouped list of per-rollout number of evictions.
         current_iteration: Current training iteration.
@@ -1093,8 +1133,8 @@ def prep_wandb_metrics(
     table_rewards = [r for g in _real(rewards) for r in g]
     traj_lens_real = _real(traj_lens)
     num_turns_real = _real(num_turns)
-    policy_epoch_real = _real(policy_epoch)
-    kv_cache_epoch_real = _real(kv_cache_epoch)
+    policy_segments_real = _real(policy_epoch_segments)
+    kv_segments_real = _real(kv_cache_epoch_segments)
 
     group_table = wandb_writer.Table(
         columns=['group_means', 'group_stds'],
@@ -1103,45 +1143,63 @@ def prep_wandb_metrics(
 
     # Per-rollout staleness (oldest token). Epoch rows are (epoch, token_count) segments;
     # a segment's first/last epoch is its first/last token's epoch.
-    rollout_policy_staleness = [current_iteration - r[0][0] for g in policy_epoch_real for r in g]
-    rollout_kv_staleness = [current_iteration - r[0][0] for g in kv_cache_epoch_real for r in g]
+    rollout_policy_staleness = [
+        current_iteration - r[0].epoch for g in policy_segments_real for r in g
+    ]
+    rollout_kv_staleness = [current_iteration - r[0].epoch for g in kv_segments_real for r in g]
     # Per-rollout staleness (newest token)
     rollout_policy_last_token_staleness = [
-        current_iteration - r[-1][0] for g in policy_epoch_real for r in g
+        current_iteration - r[-1].epoch for g in policy_segments_real for r in g
     ]
     rollout_kv_last_token_staleness = [
-        current_iteration - r[-1][0] for g in kv_cache_epoch_real for r in g
+        current_iteration - r[-1].epoch for g in kv_segments_real for r in g
     ]
     # Exact token-weighted per-rollout average staleness.
     rollout_policy_avg_staleness = [
-        current_iteration - sum(e * c for e, c in r) / sum(c for _, c in r)
-        for g in policy_epoch_real
+        current_iteration
+        - sum(s.epoch * s.token_count for s in r) / sum(s.token_count for s in r)
+        for g in policy_segments_real
         for r in g
     ]
     rollout_kv_avg_staleness = [
-        current_iteration - sum(e * c for e, c in r) / sum(c for _, c in r)
-        for g in kv_cache_epoch_real
+        current_iteration
+        - sum(s.epoch * s.token_count for s in r) / sum(s.token_count for s in r)
+        for g in kv_segments_real
         for r in g
     ]
     # Token-weighted within-rollout staleness dispersion.
     rollout_policy_staleness_std = [
-        (sum(c * (current_iteration - e - m) ** 2 for e, c in r) / sum(c for _, c in r)) ** 0.5
-        for r, m in zip((r for g in policy_epoch_real for r in g), rollout_policy_avg_staleness)
+        (
+            sum(s.token_count * (current_iteration - s.epoch - m) ** 2 for s in r)
+            / sum(s.token_count for s in r)
+        )
+        ** 0.5
+        for r, m in zip((r for g in policy_segments_real for r in g), rollout_policy_avg_staleness)
     ]
     rollout_kv_staleness_std = [
-        (sum(c * (current_iteration - e - m) ** 2 for e, c in r) / sum(c for _, c in r)) ** 0.5
-        for r, m in zip((r for g in kv_cache_epoch_real for r in g), rollout_kv_avg_staleness)
+        (
+            sum(s.token_count * (current_iteration - s.epoch - m) ** 2 for s in r)
+            / sum(s.token_count for s in r)
+        )
+        ** 0.5
+        for r, m in zip((r for g in kv_segments_real for r in g), rollout_kv_avg_staleness)
     ]
     # Per-token staleness as (rollout, policy, kv, token_count) rows.
     per_token_staleness_rows = [
-        (rollout_idx, current_iteration - pol_e, current_iteration - kv_e, count)
+        (
+            rollout_idx,
+            current_iteration - aligned.policy_epoch,
+            current_iteration - aligned.kv_cache_epoch,
+            aligned.token_count,
+        )
         for rollout_idx, (pol_row, kv_row) in enumerate(
             zip(
-                (r for g in policy_epoch_real for r in g),
-                (r for g in kv_cache_epoch_real for r in g),
+                (r for g in policy_segments_real for r in g),
+                (r for g in kv_segments_real for r in g),
+                strict=True,
             )
         )
-        for pol_e, kv_e, count in merge_epoch_segments(pol_row, kv_row)
+        for aligned in merge_epoch_segments(pol_row, kv_row)
     ]
 
     metrics = {
@@ -1398,14 +1456,15 @@ def maybe_log_training_metrics(
     rewards = group_stats.rewards
     num_turns = group_stats.num_turns
     advantages = group_stats.advantages
-    policy_epoch = group_stats.policy_epoch
-    kv_cache_epoch = group_stats.kv_cache_epoch
+    policy_epoch_segments = group_stats.policy_epoch_segments
+    kv_cache_epoch_segments = group_stats.kv_cache_epoch_segments
     completed_epochs = group_stats.completed_epochs
     num_evictions = group_stats.num_evictions
 
     metrics = metrics | prep_wandb_metrics(wandb_writer=wandb_writer,
         traj_lens=traj_lens, turn_lens=turn_lens, rewards=rewards, num_turns=num_turns, advantages=advantages,
-        policy_epoch=policy_epoch, kv_cache_epoch=kv_cache_epoch, completed_epochs=completed_epochs,
+        policy_epoch_segments=policy_epoch_segments,
+        kv_cache_epoch_segments=kv_cache_epoch_segments, completed_epochs=completed_epochs,
         num_evictions=num_evictions, current_iteration=current_iteration)
     env_stats = lambda cont, idx: [cont[i] for i in idx]
     group_turn_counts = [sum(nt) for nt in num_turns]
@@ -1425,8 +1484,8 @@ def maybe_log_training_metrics(
             rewards=env_stats(rewards, env_idx),
             num_turns=env_stats(num_turns, env_idx),
             advantages=env_advantages,
-            policy_epoch=env_stats(policy_epoch, env_idx),
-            kv_cache_epoch=env_stats(kv_cache_epoch, env_idx),
+            policy_epoch_segments=env_stats(policy_epoch_segments, env_idx),
+            kv_cache_epoch_segments=env_stats(kv_cache_epoch_segments, env_idx),
             completed_epochs=env_stats(completed_epochs, env_idx),
             num_evictions=env_stats(num_evictions, env_idx),
             current_iteration=current_iteration,

@@ -3,7 +3,7 @@
 import asyncio
 import time
 from abc import ABC, abstractmethod
-from typing import AsyncIterator, Awaitable, Callable, Generic, NamedTuple, TypeVar
+from typing import AsyncIterator, Awaitable, Callable, Generic, NamedTuple, TypeAlias, TypeVar
 
 import numpy as np
 from pydantic import BaseModel
@@ -47,6 +47,17 @@ class GroupedRolloutRequest(Request):
     consumption_granularity: ConsumptionGranularity = "B"
 
 
+class EpochBoundary(NamedTuple):
+    """RLE boundary: `epoch` applies from `start_token_index` until the next boundary."""
+
+    start_token_index: int
+    epoch: int
+
+
+RolloutEpochBoundaries: TypeAlias = list[list[EpochBoundary]]
+"""Per-turn lists of epoch boundaries over the turn's cumulative token sequence."""
+
+
 class Rollout(AgentBaseModel):
     """Data for language-based Rollout."""
 
@@ -55,8 +66,8 @@ class Rollout(AgentBaseModel):
     reward: float = None
     env_id: str = ''
     problem_id: str | None = None
-    policy_epoch: list[list[tuple[int, int]]]
-    kv_cache_epoch: list[list[tuple[int, int]]]
+    policy_epoch: RolloutEpochBoundaries
+    kv_cache_epoch: RolloutEpochBoundaries
     num_evictions: list[int]
 
 
@@ -69,8 +80,8 @@ class TokenRollout(AgentBaseModel):
     logprobs: list[list[float]] | None = None
     env_id: str = ''
     problem_id: str | None = None
-    policy_epoch: list[list[tuple[int, int]]]
-    kv_cache_epoch: list[list[tuple[int, int]]]
+    policy_epoch: RolloutEpochBoundaries
+    kv_cache_epoch: RolloutEpochBoundaries
     num_evictions: list[int]
 
 
