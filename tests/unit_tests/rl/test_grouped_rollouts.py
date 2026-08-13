@@ -125,6 +125,23 @@ async def _flush(rounds: int = 50):
         await asyncio.sleep(0)
 
 
+def _restored_group(env_id: str, problem_id: str) -> RolloutGroup:
+    return RolloutGroup(
+        rollouts=[
+            Rollout(
+                trajectory=[f"cached-{problem_id}"],
+                reward=1.0,
+                env_id=env_id,
+                problem_id=problem_id,
+                policy_epoch=[[(0, 0)]],
+                kv_cache_epoch=[[(0, 0)]],
+                num_evictions=[0],
+            )
+        ],
+        uid=f"uid-{problem_id}",
+    )
+
+
 class TestSubmissionGate:
     @pytest.mark.asyncio
     @pytest.mark.parametrize("submission", ["R", "G", "B"])
@@ -423,68 +440,108 @@ class TestGroupedRollouts:
         )
 
     @pytest.mark.asyncio
-    async def test_num_groups_per_env_override_produces_residual_shape(self):
-        """An explicit per-env override bypasses the weight split.
-
-        Used to fill the per-env residual left after injecting restored
-        rollout-bank groups: a residual of 0 for an over-represented env must stay
-        0, not be re-weighted back up.
-        """
+    async def test_non_streaming_restored_groups_replace_fresh_generation_per_env(self):
         configs = [
             AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "a"}, weight=1.0),
             AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "b"}, weight=1.0),
-            AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "c"}, weight=1.0),
         ]
         mt = WeightedMultiTask(configs)
         mt.parallel_generation_tasks = 4
+        assert mt.set_restored_groups(
+            [_restored_group("a", "a0"), _restored_group("a", "a1")]
+        ) == 2
 
         request = GroupedRolloutRequest(
             num_groups=4,
             rollouts_per_group=1,
             inference_interface=MockInferenceInterface(),
             streaming=False,
-            num_groups_per_env={"a": 0, "b": 2, "c": 2},
         )
-        env_ids = [g[0].env_id async for g in mt.get_grouped_rollouts(request)]
-        # Equal weights alone would give a/b/c ~ [2, 1, 1]; the override forces the
-        # residual shape instead: no env "a", two each of "b" and "c".
-        assert sorted(env_ids) == ["b", "b", "c", "c"]
+        groups = [group async for group in mt.get_grouped_rollouts(request)]
+
+        assert sorted(group[0].env_id for group in groups) == ["a", "a", "b", "b"]
+        assert sorted(
+            group[0].problem_id for group in groups if group[0].env_id == "a"
+        ) == ["a0", "a1"]
+        assert mt.agents[0].prepare_group_rollout_calls == 0
+        assert mt.agents[1].prepare_group_rollout_calls == 2
+        assert not mt._restored_groups["a"]
 
     @pytest.mark.asyncio
-    async def test_num_groups_per_env_none_matches_weight_split(self):
-        """Regression: omitting the override reproduces the weight-proportional split."""
-        configs = [
-            AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "a"}, weight=3.0),
-            AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "b"}, weight=1.0),
-        ]
-        mt = WeightedMultiTask(configs)
-        mt.parallel_generation_tasks = 4
-        request = GroupedRolloutRequest(
-            num_groups=4,
-            rollouts_per_group=1,
-            inference_interface=MockInferenceInterface(),
-            streaming=False,
-        )
-        env_ids = [g[0].env_id async for g in mt.get_grouped_rollouts(request)]
-        assert sorted(env_ids) == ["a", "a", "a", "b"]
-
-    @pytest.mark.asyncio
-    async def test_num_groups_per_env_rejects_unknown_env(self):
+    async def test_streaming_restored_backlog_drains_without_replacement_generation(self):
         configs = [
             AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "a"}, weight=1.0),
             AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "b"}, weight=1.0),
         ]
         mt = WeightedMultiTask(configs)
+        mt.parallel_generation_tasks = 4
+        mt.set_restored_groups([_restored_group("a", f"a{i}") for i in range(4)])
+        request = GroupedRolloutRequest(
+            num_groups=4,
+            rollouts_per_group=1,
+            inference_interface=MockInferenceInterface(),
+            streaming=True,
+        )
+        generator = mt.get_grouped_rollouts(request)
+        try:
+            groups = [await asyncio.wait_for(anext(generator), timeout=10) for _ in range(8)]
+
+            assert [group[0].env_id for group in groups].count("a") == 4
+            assert [group[0].env_id for group in groups].count("b") == 4
+            assert all(
+                group[0].trajectory[0].startswith("cached-")
+                for group in groups
+                if group[0].env_id == "a"
+            )
+            assert mt.agents[0].prepare_group_rollout_calls == 0
+            assert mt.agents[1].prepare_group_rollout_calls > 0
+            assert not mt._restored_groups["a"]
+
+            next_groups = [
+                await asyncio.wait_for(anext(generator), timeout=10) for _ in range(2)
+            ]
+            assert {group[0].env_id for group in next_groups} == {"a", "b"}
+            assert mt.agents[0].prepare_group_rollout_calls > 0
+        finally:
+            await generator.aclose()
+
+    @pytest.mark.asyncio
+    async def test_single_env_does_not_require_env_id_for_restore_routing(self):
+        mt = WeightedMultiTask(
+            [AgentConfig(agent_type=MockGenerator, agent_args={"env_id": ""}, weight=1.0)]
+        )
+        mt.parallel_generation_tasks = 2
+        assert mt.set_restored_groups([_restored_group("", "cached")]) == 1
+
         request = GroupedRolloutRequest(
             num_groups=2,
             rollouts_per_group=1,
             inference_interface=MockInferenceInterface(),
             streaming=False,
-            num_groups_per_env={"a": 2, "z": 0},
         )
-        with pytest.raises(ValueError, match="unknown env_id"):
-            async for _ in mt.get_grouped_rollouts(request):
-                pass
+        groups = [group async for group in mt.get_grouped_rollouts(request)]
+        assert [group[0].env_id for group in groups] == ["", ""]
+        assert mt.agents[0].prepare_group_rollout_calls == 1
+
+    def test_multiple_envs_require_env_ids_for_restore_routing(self):
+        mt = WeightedMultiTask(
+            [
+                AgentConfig(agent_type=MockGenerator, agent_args={"env_id": ""}, weight=1.0),
+                AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "b"}, weight=1.0),
+            ]
+        )
+
+        with pytest.raises(ValueError, match="configuring multiple active agents"):
+            mt.set_restored_groups([])
+
+    def test_restored_groups_reject_unknown_env(self):
+        configs = [
+            AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "a"}, weight=1.0),
+            AgentConfig(agent_type=MockGenerator, agent_args={"env_id": "b"}, weight=1.0),
+        ]
+        mt = WeightedMultiTask(configs)
+        with pytest.raises(ValueError, match="not in the current"):
+            mt.set_restored_groups([_restored_group("z", "z0")])
 
     @pytest.mark.parametrize(
         "num_groups, all_envs_active",

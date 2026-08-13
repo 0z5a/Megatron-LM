@@ -20,17 +20,7 @@ from ..inference import (
 )
 from ..rollout_bank import RolloutBank
 from ..rollout_granularity import ConsumptionGranularity, SubmissionGranularity
-from ..types import (
-    AgentBaseModel,
-    EnvId,
-    GroupedRollouts,
-    GroupQueuesPerEnv,
-    GroupsPerEnv,
-    Rollout,
-    RolloutGroup,
-    Rollouts,
-    TokenRollout,
-)
+from ..types import AgentBaseModel, GroupedRollouts, Rollout, RolloutGroup, Rollouts, TokenRollout
 
 
 class RolloutRequest(Request):
@@ -52,7 +42,6 @@ class GroupedRolloutRequest(Request):
     streaming: bool = False
     submission_granularity: SubmissionGranularity = "B"
     consumption_granularity: ConsumptionGranularity = "B"
-    num_groups_per_env: GroupsPerEnv | None = None
 
 
 class EpisodeResult(NamedTuple):

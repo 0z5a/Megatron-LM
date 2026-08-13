@@ -11,7 +11,6 @@ compaction, and an end-to-end write-through/restore through the real
 import asyncio
 import json
 import os
-from collections import deque
 
 import numpy as np
 import pytest
@@ -934,71 +933,31 @@ def _weighted_agent(env_weights):
     )
 
 
-class TestRestoreBalancing:
-    """Cap-and-defer injection + per-env residual balancing for restored groups."""
+class TestRestoreProducer:
+    """Recovered groups become per-environment producers in WeightedMultiTask."""
 
-    def test_env_targets_matches_distribute_counts(self):
+    def test_set_restored_groups_buckets_by_env(self):
         agent = _weighted_agent([("a", 1.0), ("b", 1.0), ("c", 1.0)])
-        for n in (3, 6, 7, 10):
-            expected: dict = {}
-            for eid, c in zip(agent._env_ids(), agent._distribute_counts(n)):
-                expected[eid] = expected.get(eid, 0) + c
-            assert rl_utils._env_targets(agent, n) == expected
-            assert sum(rl_utils._env_targets(agent, n).values()) == n
-
-    def test_plan_restore_injection_caps_and_defers(self):
-        target = {"a": 2, "b": 2, "c": 2}
-        restored = {"a": deque(range(6))}  # 6 restored groups, all env "a"
-        inject, residual = rl_utils._plan_restore_injection(target, restored)
-        assert inject == {"a": 2, "b": 0, "c": 0}  # capped at target["a"], 4 deferred
-        assert residual == {"a": 0, "b": 2, "c": 2}
-        for env in target:
-            assert inject[env] + residual[env] == target[env]
-
-    def test_restore_injection_drain_window_stays_balanced(self):
-        target = {"a": 2, "b": 2, "c": 2}
-        restored = {"a": deque(f"a{i}" for i in range(6))}
-        injected_total = []
-        steps = 0
-        while any(restored.values()):
-            inject, residual = rl_utils._plan_restore_injection(target, restored)
-            for env in target:
-                # No env ever injects more than its weighted target for the batch.
-                assert inject[env] <= target[env]
-                assert inject[env] + residual[env] == target[env]
-            for env, count in inject.items():
-                for _ in range(count):
-                    injected_total.append(restored[env].popleft())
-            steps += 1
-            assert steps < 100, "drain did not terminate"
-        # Every restored group is eventually injected; none dropped.
-        assert len(injected_total) == 6
-
-    def test_bucket_restored_groups_buckets_by_env(self):
         groups = [_env_group("a"), _env_group("b"), _env_group("a")]
-        buckets = rl_utils._bucket_restored_groups(groups, {"a", "b", "c"})
-        assert set(buckets) == {"a", "b"}
-        assert len(buckets["a"]) == 2 and len(buckets["b"]) == 1
+        assert agent.set_restored_groups(groups) == 3
+        assert set(agent._restored_groups) == {"a", "b"}
+        assert len(agent._restored_groups["a"]) == 2
+        assert len(agent._restored_groups["b"]) == 1
 
-    def test_bucket_restored_groups_asserts_env_config_drift(self):
-        with pytest.raises(AssertionError, match="not in the current"):
-            rl_utils._bucket_restored_groups([_env_group("z")], {"a", "b"})
+    def test_set_restored_groups_rejects_env_config_drift(self):
+        agent = _weighted_agent([("a", 1.0), ("b", 1.0)])
+        with pytest.raises(ValueError, match="not in the current"):
+            agent.set_restored_groups([_env_group("z")])
 
-    def test_bucket_and_plan_from_real_bank(self, tmp_path):
-        # End-to-end: bank 6 groups all env "a", restore, bucket, and plan step 1.
+    def test_real_bank_recovery_installs_producer_queues(self, tmp_path):
         bank = RolloutBank(str(tmp_path))
         bank.set_collection(0)
         for i in range(6):
             bank.append(_env_group("a", problem_id=f"p{i}"))
         bank.close()
 
-        restored = RolloutBank(str(tmp_path)).restore(trained_through=0)
+        restored = RolloutBank(str(tmp_path)).recover(trained_through=0)
         assert len(restored) == 6
-        buckets = rl_utils._bucket_restored_groups(restored, {"a", "b", "c"})
-        assert len(buckets["a"]) == 6
-
         agent = _weighted_agent([("a", 1.0), ("b", 1.0), ("c", 1.0)])
-        target = rl_utils._env_targets(agent, 6)
-        inject, residual = rl_utils._plan_restore_injection(target, buckets)
-        assert inject == {"a": 2, "b": 0, "c": 0}
-        assert residual == {"a": 0, "b": 2, "c": 2}
+        assert agent.set_restored_groups(restored) == 6
+        assert len(agent._restored_groups["a"]) == 6
