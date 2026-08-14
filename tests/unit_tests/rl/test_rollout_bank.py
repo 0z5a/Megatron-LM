@@ -579,21 +579,27 @@ class TestDurability:
 
 
 class TestMarkerFilter:
-    def test_marker_filter_rules(self, tmp_path):
+    @pytest.mark.parametrize(
+        "consumed_offset, should_restore",
+        [
+            pytest.param(-1, False, id="ckpt_minus_one"),
+            pytest.param(0, False, id="ckpt"),
+            pytest.param(1, True, id="ckpt_plus_one"),
+        ],
+    )
+    def test_marker_filter_at_checkpoint_boundary(self, tmp_path, consumed_offset, should_restore):
+        checkpoint_iteration = 10
         bank = RolloutBank(str(tmp_path))
         bank.set_collection(5)
-        trained = bank.append(sample_group())  # consumed at 5 <= T=10 -> discard
-        rolled_back = bank.append(sample_group())  # consumed at 12 > T=10 -> restore
-        _never = bank.append(sample_group())  # no marker -> restore
-        bank.mark_consumed(trained, 5)
-        bank.mark_consumed(rolled_back, 12)
+        consumed = bank.append(sample_group())
+        never_consumed = bank.append(sample_group())
+        bank.mark_consumed(consumed, checkpoint_iteration + consumed_offset)
         bank.close()
 
-        restored = RolloutBank(str(tmp_path)).restore(trained_through=10)
-        uids = {g.uid for g in restored}
-        assert trained not in uids
-        assert rolled_back in uids
-        assert _never in uids
+        restored = RolloutBank(str(tmp_path)).restore(trained_through=checkpoint_iteration)
+        restored_uids = {group.uid for group in restored}
+        assert (consumed in restored_uids) is should_restore
+        assert never_consumed in restored_uids
 
 
 class TestCompaction:
