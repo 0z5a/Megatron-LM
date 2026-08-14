@@ -790,6 +790,10 @@ class RolloutBank:
             m["trajectory"] = traj_per_member[i]
             m["logprobs"] = lp_per_member[i] if lp_per_member is not None else None
             m["generation_mask"] = mask_per_member[i] if mask_per_member is not None else None
+            # Completion IDs point into the inference engine's process-local
+            # metadata ledger. That ledger does not survive a crash, so recovered
+            # rollouts must not attempt to join against stale IDs.
+            m["completion_ids"] = []
             members.append(TokenRollout.model_validate(m))
         group = RolloutGroup(
             rollouts=members,

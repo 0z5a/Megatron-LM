@@ -5,19 +5,21 @@
 Covers the append -> restore round trip, checksum/torn-write handling for both the
 JSONL index and the binary sidecars, the consumption-marker filter, manifest +
 compaction, and an end-to-end write-through/restore through the real
-``_RolloutPipeline`` (reusing the mocks from ``test_grouped_rollouts``).
+``RolloutPipeline`` (reusing the rollout-generation test mocks).
 """
 
 import asyncio
 import json
 import os
+from contextlib import aclosing
 
 import numpy as np
 import pytest
 
 from megatron.core.dist_checkpointing.strategies.async_utils import AsyncRequest
 from megatron.rl import rl_utils, rollout_bank
-from megatron.rl.agent.api import Rollout, RolloutGroup, TokenRollout
+from megatron.rl.agent.api import GroupedRolloutRequest, Rollout, RolloutGroup, TokenRollout
+from megatron.rl.agent.rollout_pipeline import RolloutPipeline
 from megatron.rl.agent.weighted_multi_task import AgentConfig, WeightedMultiTask
 from megatron.rl.rollout_bank import (
     _CONSUMED,
@@ -34,8 +36,8 @@ from megatron.rl.types import RolloutGroup as SharedRolloutGroup
 from megatron.rl.types import TokenRollout as SharedTokenRollout
 from megatron.training.checkpointing import _register_rollout_bank_compaction
 
-# Reuse the pipeline mocks so the integration test drives the real pipeline.
-from tests.unit_tests.rl.test_grouped_rollouts import MockGenerator, MockInferenceInterface
+# Reuse the upstream pipeline mocks so the integration test drives the real pipeline.
+from tests.unit_tests.rl.test_rollout_generation import MockGenerator, MockInferenceInterface
 
 
 def test_agent_api_reexports_shared_rollout_types():
@@ -44,28 +46,8 @@ def test_agent_api_reexports_shared_rollout_types():
     assert SharedTokenRollout is TokenRollout
 
 
-def test_token_rollout_declares_advantage_override():
-    rollout = TokenRollout(
-        trajectory=[[1]],
-        reward=1.0,
-        policy_epoch=[[(0, 0)]],
-        kv_cache_epoch=[[(0, 0)]],
-        num_evictions=[0],
-        advantage_override="-5.0",
-    )
-
-    assert "advantage_override" in TokenRollout.model_fields
-    assert rollout.advantage_override == -5.0
-
-
 def test_rollout_reward_accepts_none():
-    rollout = Rollout(
-        trajectory=["prompt"],
-        reward=None,
-        policy_epoch=[[(0, 0)]],
-        kv_cache_epoch=[[(0, 0)]],
-        num_evictions=[0],
-    )
+    rollout = Rollout(trajectory=["prompt"], reward=None)
 
     assert rollout.reward is None
 
@@ -77,7 +59,7 @@ def make_token_group(members, *, batch_id=0, index_in_batch=0):
     jagged list, so the sidecar packing is exercised with multi-turn, ragged data.
     """
     rollouts = []
-    for tokens, logprobs, mask in members:
+    for member_index, (tokens, logprobs, mask) in enumerate(members):
         rollouts.append(
             TokenRollout(
                 trajectory=tokens,
@@ -86,9 +68,10 @@ def make_token_group(members, *, batch_id=0, index_in_batch=0):
                 generation_mask=mask,
                 env_id="test",
                 problem_id="p",
-                policy_epoch=[[(0, 0)]],
-                kv_cache_epoch=[[(0, 0)]],
-                num_evictions=[0],
+                completion_ids=[
+                    f"completion-{member_index}-{turn_index}"
+                    for turn_index in range(len(tokens))
+                ],
             )
         )
     return RolloutGroup(rollouts=rollouts, batch_id=batch_id, index_in_batch=index_in_batch)
@@ -115,9 +98,6 @@ def text_group():
                 trajectory=["hello world"],
                 reward=0.5,
                 env_id="t",
-                policy_epoch=[[(0, 0)]],
-                kv_cache_epoch=[[(0, 0)]],
-                num_evictions=[0],
             )
         ]
     )
@@ -271,6 +251,8 @@ class TestRoundTrip:
         assert g.rollouts[1].trajectory == [[7, 8]]
         # generation_mask preserved exactly
         assert g.rollouts[0].generation_mask == [[False, True, True], [True, True]]
+        assert g.rollouts[0].completion_ids == []
+        assert g.rollouts[1].completion_ids == []
         # logprobs recovered within fp16 tolerance
         assert np.allclose(g.rollouts[0].logprobs[0], [-0.1, -0.2, -0.3], atol=1e-3)
         assert np.allclose(g.rollouts[1].logprobs[0], [-1.5, -2.5], atol=1e-3)
@@ -318,9 +300,7 @@ class TestRoundTrip:
             generation_mask=[[True, True]],
             env_id="test",
             problem_id="p",
-            policy_epoch=[[(0, 0)]],
-            kv_cache_epoch=[[(0, 0)]],
-            num_evictions=[0],
+            completion_ids=["completion-derived-0"],
         )
         bank = RolloutBank(str(tmp_path))
         bank.set_collection(0)
@@ -865,13 +845,10 @@ class TestPipelineIntegration:
 
     def _collect(self, tmp_path, num_groups=4, stop_after=None):
         async def run():
-            gen = MockGenerator(parallel_generation_tasks=8)
+            gen = MockGenerator()
             bank = RolloutBank(str(tmp_path))
             bank.set_collection(0)
-            gen._rollout_bank = bank
             request_groups = []
-            from megatron.rl.agent.api import GroupedRolloutRequest
-
             req = GroupedRolloutRequest(
                 num_groups=num_groups,
                 rollouts_per_group=2,
@@ -879,10 +856,12 @@ class TestPipelineIntegration:
                 submission_granularity="B",
                 consumption_granularity="B",
             )
-            async for group in gen.get_grouped_rollouts(req):
-                request_groups.append(group)
-                if stop_after is not None and len(request_groups) >= stop_after:
-                    break
+            pipeline = RolloutPipeline(gen, req, parallel_generation_tasks=8, bank=bank)
+            async with aclosing(pipeline.run()) as groups:
+                async for group in groups:
+                    request_groups.append(group)
+                    if stop_after is not None and len(request_groups) >= stop_after:
+                        break
             bank.close()
             return request_groups
 
@@ -916,9 +895,6 @@ def _env_group(env_id, problem_id="p"):
                 reward=1.0,
                 env_id=env_id,
                 problem_id=problem_id,
-                policy_epoch=[[(0, 0)]],
-                kv_cache_epoch=[[(0, 0)]],
-                num_evictions=[0],
             )
         ]
     )
@@ -961,3 +937,86 @@ class TestRestoreProducer:
         agent = _weighted_agent([("a", 1.0), ("b", 1.0), ("c", 1.0)])
         assert agent.set_restored_groups(restored) == 6
         assert len(agent._restored_groups["a"]) == 6
+
+    @pytest.mark.asyncio
+    async def test_non_streaming_restored_groups_replace_fresh_per_env(self):
+        agent = _weighted_agent([("a", 1.0), ("b", 1.0)])
+        restored = [_env_group("a", problem_id=f"a{i}") for i in range(2)]
+        for index, group in enumerate(restored):
+            group.uid = f"restored-{index}"
+        assert agent.set_restored_groups(restored) == 2
+        request = GroupedRolloutRequest(
+            num_groups=4,
+            rollouts_per_group=1,
+            inference_interface=MockInferenceInterface(),
+            streaming=False,
+        )
+
+        groups = [
+            group
+            async for group in RolloutPipeline(
+                agent, request, parallel_generation_tasks=1
+            ).run()
+        ]
+
+        assert sorted(group[0].env_id for group in groups) == ["a", "a", "b", "b"]
+        assert sorted(group[0].problem_id for group in groups if group[0].env_id == "a") == [
+            "a0",
+            "a1",
+        ]
+        assert agent.agents[0].prepare_group_rollout_calls == 0
+        assert agent.agents[1].prepare_group_rollout_calls == 2
+        assert not agent._restored_groups["a"]
+
+    @pytest.mark.asyncio
+    async def test_streaming_restored_backlog_drains_before_fresh_per_env(self):
+        agent = _weighted_agent([("a", 1.0), ("b", 1.0)])
+        restored = [_env_group("a", problem_id=f"a{i}") for i in range(4)]
+        agent.set_restored_groups(restored)
+        request = GroupedRolloutRequest(
+            num_groups=4,
+            rollouts_per_group=1,
+            inference_interface=MockInferenceInterface(),
+            streaming=True,
+        )
+        pipeline = RolloutPipeline(agent, request, parallel_generation_tasks=1)
+
+        async with aclosing(pipeline.run()) as groups:
+            first_two_batches = [await asyncio.wait_for(anext(groups), timeout=10) for _ in range(8)]
+            assert [group[0].env_id for group in first_two_batches].count("a") == 4
+            assert [group[0].env_id for group in first_two_batches].count("b") == 4
+            assert agent.agents[0].prepare_group_rollout_calls == 0
+            assert agent.agents[1].prepare_group_rollout_calls == 4
+            assert not agent._restored_groups["a"]
+
+            next_batch = [await asyncio.wait_for(anext(groups), timeout=10) for _ in range(4)]
+            assert [group[0].env_id for group in next_batch].count("a") == 2
+            assert [group[0].env_id for group in next_batch].count("b") == 2
+            assert agent.agents[0].prepare_group_rollout_calls == 2
+
+    @pytest.mark.asyncio
+    async def test_single_env_restore_routing_does_not_require_env_id(self):
+        agent = _weighted_agent([("", 1.0)])
+        assert agent.set_restored_groups([_env_group("", problem_id="cached")]) == 1
+        request = GroupedRolloutRequest(
+            num_groups=2,
+            rollouts_per_group=1,
+            inference_interface=MockInferenceInterface(),
+            streaming=False,
+        )
+
+        groups = [
+            group
+            async for group in RolloutPipeline(
+                agent, request, parallel_generation_tasks=1
+            ).run()
+        ]
+
+        assert [group[0].env_id for group in groups] == ["", ""]
+        assert agent.agents[0].prepare_group_rollout_calls == 1
+
+    def test_multiple_envs_require_env_ids_for_restore_routing(self):
+        agent = _weighted_agent([("", 1.0), ("b", 1.0)])
+
+        with pytest.raises(ValueError, match="configuring multiple active agents"):
+            agent.set_restored_groups([])
