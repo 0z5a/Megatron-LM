@@ -210,6 +210,7 @@ class RolloutPipeline:
         request: GroupedRolloutRequest,
         parallel_generation_tasks: int,
         bank: "RolloutBank | None" = None,
+        initial_batch_id: int = 0,
     ) -> None:
         """Validate the request and size the gate, queues, and worker pool.
 
@@ -218,6 +219,7 @@ class RolloutPipeline:
             request: Grouped rollout request to serve; one pipeline per request.
             parallel_generation_tasks: Submission gate depth in trainer batches.
             bank: Optional durable store for freshly completed rollout groups.
+            initial_batch_id: Batch ID assigned to the first batch in this pipeline.
         """
         assert isinstance(
             request.inference_interface, ReturnsRaw
@@ -225,6 +227,7 @@ class RolloutPipeline:
         self.agent = agent
         self.request = request
         self.bank = bank
+        self.initial_batch_id = initial_batch_id
         self.allocations = agent.rollout_allocations(request.num_groups)
         self.gran_policy = _GranularityConfig.from_request(
             request, [allocation.num_groups for allocation in self.allocations]
@@ -317,7 +320,10 @@ class RolloutPipeline:
         try:
             while self.request.streaming or group_id < self.request.num_groups:
                 await self.gate.acquire_for("B")
-                batch_id = group_id // self.gran_policy.num_groups_per_batch
+                batch_id = (
+                    self.initial_batch_id
+                    + group_id // self.gran_policy.num_groups_per_batch
+                )
 
                 for index_in_batch in range(self.gran_policy.num_groups_per_batch):
                     env_index = self.gran_policy.env_of_index(index_in_batch)
@@ -503,7 +509,7 @@ class RolloutPipeline:
 
     async def _consume_batch_order(self) -> AsyncIterator[RolloutGroup]:
         """B consumption: deliver whole batches in dataset order."""
-        next_batch_id = 0
+        next_batch_id = self.initial_batch_id
         pending = self._consume_pending
         while (group := await self._next_complete_group()) is not None:
             pending.setdefault(group.batch_id, []).append(group)

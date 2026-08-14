@@ -978,6 +978,9 @@ class TestRestoreProducer:
     async def test_streaming_restored_backlog_drains_before_fresh_per_env(self):
         agent = _weighted_agent([("a", 1.0), ("b", 1.0)])
         restored = [_env_group("a", problem_id=f"a{i}") for i in range(4)]
+        for index, group in enumerate(restored):
+            group.batch_id = 100 + index
+            group.index_in_batch = 100 + index
         agent.set_restored_groups(restored)
         request = GroupedRolloutRequest(
             num_groups=4,
@@ -985,10 +988,17 @@ class TestRestoreProducer:
             inference_interface=MockInferenceInterface(),
             streaming=True,
         )
-        pipeline = RolloutPipeline(agent, request, parallel_generation_tasks=1)
+        pipeline = RolloutPipeline(
+            agent,
+            request,
+            parallel_generation_tasks=1,
+            initial_batch_id=20,
+        )
 
         async with aclosing(pipeline.run()) as groups:
             first_two_batches = [await asyncio.wait_for(anext(groups), timeout=10) for _ in range(8)]
+            assert [group.batch_id for group in first_two_batches] == [20] * 4 + [21] * 4
+            assert [group.index_in_batch for group in first_two_batches] == [0, 1, 2, 3] * 2
             assert [group[0].env_id for group in first_two_batches].count("a") == 4
             assert [group[0].env_id for group in first_two_batches].count("b") == 4
             assert agent.agents[0].prepare_group_rollout_calls == 0
@@ -996,6 +1006,8 @@ class TestRestoreProducer:
             assert not agent._restored_groups["a"]
 
             next_batch = [await asyncio.wait_for(anext(groups), timeout=10) for _ in range(4)]
+            assert [group.batch_id for group in next_batch] == [22] * 4
+            assert [group.index_in_batch for group in next_batch] == [0, 1, 2, 3]
             assert [group[0].env_id for group in next_batch].count("a") == 2
             assert [group[0].env_id for group in next_batch].count("b") == 2
             assert agent.agents[0].prepare_group_rollout_calls == 2

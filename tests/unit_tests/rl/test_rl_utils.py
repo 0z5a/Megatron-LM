@@ -252,11 +252,19 @@ class TestRLUtils:
         agent = object()
 
         class FakePipeline:
-            def __init__(self, agent, request, parallel_generation_tasks, bank=None):
+            def __init__(
+                self,
+                agent,
+                request,
+                parallel_generation_tasks,
+                bank=None,
+                initial_batch_id=0,
+            ):
                 captured["agent"] = agent
                 captured["request"] = request
                 captured["parallel_generation_tasks"] = parallel_generation_tasks
                 captured["bank"] = bank
+                captured["initial_batch_id"] = initial_batch_id
 
             def run(self):
                 return rollout_generator
@@ -280,6 +288,7 @@ class TestRLUtils:
             consumption_granularity="B",
             generation_lag=generation_lag,
             env_config_path="unused.yaml",
+            current_iteration=17,
         )
 
         assert result is rollout_generator
@@ -290,6 +299,7 @@ class TestRLUtils:
         # independent of submission granularity.
         assert captured["parallel_generation_tasks"] == generation_lag + 1
         assert captured["request"].submission_granularity == submission_granularity
+        assert captured["initial_batch_id"] == 17
 
     @pytest.mark.parametrize(
         "overrides, match",

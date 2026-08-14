@@ -628,6 +628,7 @@ def get_rollout_generator(
     consumption_granularity: ConsumptionGranularity,
     generation_lag: int,
     env_config_path: str,
+    current_iteration: int,
 ) -> AsyncIterator[RolloutGroup]:
     """Return the rollout group iterator for this step.
 
@@ -652,6 +653,7 @@ def get_rollout_generator(
             request=request,
             parallel_generation_tasks=generation_lag + 1,
             bank=get_rollout_bank(),
+            initial_batch_id=current_iteration,
         )
         _ROLLOUT_GENERATOR = _ROLLOUT_PIPELINE.run()
     return _ROLLOUT_GENERATOR
@@ -753,6 +755,7 @@ def get_environment_rollouts(
                     consumption_granularity=args.rl_consumption_granularity,
                     generation_lag=args.rl_generation_lag,
                     env_config_path=args.langrl_env_config,
+                    current_iteration=args.curr_iteration,
                 )
 
             # NOTE(jbarker): we need to double check this when using PP>1
