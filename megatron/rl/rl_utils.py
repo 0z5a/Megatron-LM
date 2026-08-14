@@ -771,11 +771,11 @@ def get_environment_rollouts(
                             except StopAsyncIteration:
                                 break
                     # Record consumption for every group handed to the trainer. On a
-                    # rollback (restart at T < this step) the marker > T rule restores
-                    # these; once the checkpoint advances past this step they are pruned.
+                    # rollback (restart before this update) the marker > T rule restores
+                    # these; once a checkpoint includes the update they are pruned.
                     if bank is not None:
                         bank.mark_consumed_many(
-                            (group.uid for group in rollouts), args.curr_iteration
+                            (group.uid for group in rollouts), args.curr_iteration + 1
                         )
                 else:
                     # Just set up space to collect the rollouts
