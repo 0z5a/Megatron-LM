@@ -1,0 +1,151 @@
+{
+  "verified_files": 94,
+  "cases": 27,
+  "families": {
+    "mla": {
+      "auto": {
+        "median_ms": [
+          13.811920166015625,
+          11.486559867858887,
+          15.621007919311523
+        ],
+        "parameter_digests_stable": true,
+        "gradient_digests_stable": true,
+        "choice_digest_stable": false,
+        "loss_digests_stable": true,
+        "all_losses_finite": true
+      },
+      "table": {
+        "median_ms": [
+          20.859152793884277,
+          13.546736240386963,
+          12.311503887176514
+        ],
+        "parameter_digests_stable": false,
+        "gradient_digests_stable": false,
+        "choice_digest_stable": true,
+        "loss_digests_stable": false,
+        "all_losses_finite": true
+      },
+      "cheapest": {
+        "median_ms": [
+          12.860640048980713,
+          12.021584033966064,
+          13.052608013153076
+        ],
+        "parameter_digests_stable": true,
+        "gradient_digests_stable": true,
+        "choice_digest_stable": true,
+        "loss_digests_stable": true,
+        "all_losses_finite": true
+      },
+      "table_over_auto_geomean": 1.119686524513,
+      "paired_95_ci": [
+        0.4953907949038584,
+        2.530725088299852
+      ],
+      "timing_gate_pass": false,
+      "cross_mode_parameter_digest_equal": {
+        "auto": true,
+        "cheapest": true
+      }
+    },
+    "mhc": {
+      "auto": {
+        "median_ms": [
+          12.7467041015625,
+          13.049360275268555,
+          12.586944103240967
+        ],
+        "parameter_digests_stable": true,
+        "gradient_digests_stable": true,
+        "choice_digest_stable": false,
+        "loss_digests_stable": true,
+        "all_losses_finite": true
+      },
+      "table": {
+        "median_ms": [
+          15.519583702087402,
+          28.582240104675293,
+          15.421232223510742
+        ],
+        "parameter_digests_stable": true,
+        "gradient_digests_stable": true,
+        "choice_digest_stable": true,
+        "loss_digests_stable": true,
+        "all_losses_finite": true
+      },
+      "cheapest": {
+        "median_ms": [
+          14.445263862609863,
+          34.651201248168945,
+          14.594704151153564
+        ],
+        "parameter_digests_stable": true,
+        "gradient_digests_stable": true,
+        "choice_digest_stable": true,
+        "loss_digests_stable": true,
+        "all_losses_finite": true
+      },
+      "table_over_auto_geomean": 1.483870472123863,
+      "paired_95_ci": [
+        0.6420476902604949,
+        3.429451754818619
+      ],
+      "timing_gate_pass": false,
+      "cross_mode_parameter_digest_equal": {
+        "auto": true,
+        "cheapest": false
+      }
+    },
+    "ssd": {
+      "auto": {
+        "median_ms": [
+          13.734623908996582,
+          14.565999984741211,
+          12.748895645141602
+        ],
+        "parameter_digests_stable": false,
+        "gradient_digests_stable": false,
+        "choice_digest_stable": false,
+        "loss_digests_stable": false,
+        "all_losses_finite": true
+      },
+      "table": {
+        "median_ms": [
+          15.407311916351318,
+          12.531856060028076,
+          12.124224185943604
+        ],
+        "parameter_digests_stable": true,
+        "gradient_digests_stable": true,
+        "choice_digest_stable": true,
+        "loss_digests_stable": true,
+        "all_losses_finite": true
+      },
+      "cheapest": {
+        "median_ms": [
+          14.2674560546875,
+          12.075984001159668,
+          12.558943748474121
+        ],
+        "parameter_digests_stable": true,
+        "gradient_digests_stable": true,
+        "choice_digest_stable": true,
+        "loss_digests_stable": true,
+        "all_losses_finite": true
+      },
+      "table_over_auto_geomean": 0.9718267802977861,
+      "paired_95_ci": [
+        0.6966830800420926,
+        1.3556340292445443
+      ],
+      "timing_gate_pass": false,
+      "cross_mode_parameter_digest_equal": {
+        "auto": false,
+        "cheapest": false
+      }
+    }
+  },
+  "ci_method": "Two-sided paired Student-t interval on log(table/auto median step times); n=3, df=2, t=4.30265273; exploratory small sample."
+}

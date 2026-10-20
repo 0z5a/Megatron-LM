@@ -1,0 +1,181 @@
+{
+  "family": "ssd",
+  "mode": "table",
+  "steps": [
+    {
+      "step": 0,
+      "warmup": true,
+      "milliseconds": 1413.3018798828125,
+      "loss": 7.074708938598633,
+      "loss_digest": "053c348b3636d01db0853060550405c2722d1b0f94814492c324c17db43c4d84"
+    },
+    {
+      "step": 1,
+      "warmup": true,
+      "milliseconds": 48.838016510009766,
+      "loss": 7.074652671813965,
+      "loss_digest": "b3b5dcd319a6403ac03a048216593ace61ad721c6c4a95c6f21f8b62dad48299"
+    },
+    {
+      "step": 2,
+      "warmup": true,
+      "milliseconds": 28.275136947631836,
+      "loss": 7.074625492095947,
+      "loss_digest": "04fdeb8ff91f3c8101343bf49000d30151771cceae859a225dd00355111e0207"
+    },
+    {
+      "step": 3,
+      "warmup": true,
+      "milliseconds": 16.255584716796875,
+      "loss": 7.074600696563721,
+      "loss_digest": "5665224c30d39d7a90335483c6935397dc10db6069a4e59675a2ab50b69a2ece"
+    },
+    {
+      "step": 4,
+      "warmup": false,
+      "milliseconds": 15.360575675964355,
+      "loss": 7.074578285217285,
+      "loss_digest": "01c0f7afcd562632c8d4918701372b3b01ca36dfc6021852afea2df454b47137"
+    },
+    {
+      "step": 5,
+      "warmup": false,
+      "milliseconds": 15.523232460021973,
+      "loss": 7.074570655822754,
+      "loss_digest": "c98694951afe91d7243607d6969399184e798c31211dbab26bc45c47f966789a"
+    },
+    {
+      "step": 6,
+      "warmup": false,
+      "milliseconds": 15.11513614654541,
+      "loss": 7.074651718139648,
+      "loss_digest": "1320dacf9564053c10df054ad40dd049f2769f6d3737e7590ed4148dc6362a50"
+    },
+    {
+      "step": 7,
+      "warmup": false,
+      "milliseconds": 14.035872459411621,
+      "loss": 7.074679374694824,
+      "loss_digest": "62ac29846ab94e05fc527fd1937dc1104debcfd9480d399c450dd8df8fc9e0a4"
+    },
+    {
+      "step": 8,
+      "warmup": false,
+      "milliseconds": 15.454048156738281,
+      "loss": 7.074662208557129,
+      "loss_digest": "228d6066d65fe0f88e4235d8231fa911bc07c4a6980f8abc2148afea0b48202b"
+    },
+    {
+      "step": 9,
+      "warmup": false,
+      "milliseconds": 14.20905590057373,
+      "loss": 7.074641227722168,
+      "loss_digest": "aac910805c4348e5a5f728daf0d0ccd9ca6e0ff1b3e6cb9262184b692659479a"
+    },
+    {
+      "step": 10,
+      "warmup": false,
+      "milliseconds": 13.450655937194824,
+      "loss": 7.074662208557129,
+      "loss_digest": "228d6066d65fe0f88e4235d8231fa911bc07c4a6980f8abc2148afea0b48202b"
+    },
+    {
+      "step": 11,
+      "warmup": false,
+      "milliseconds": 19.43292808532715,
+      "loss": 7.074682712554932,
+      "loss_digest": "cb9fbca872b7896ee6414730258ea4f138567b41bba5e84a7fdaec5eae5b37a6"
+    },
+    {
+      "step": 12,
+      "warmup": false,
+      "milliseconds": 20.644351959228516,
+      "loss": 7.074665069580078,
+      "loss_digest": "ba3453a5c8f06aac772f91ab5cc89923c2444e18c4fd8acbe77502f3b485de3e"
+    },
+    {
+      "step": 13,
+      "warmup": false,
+      "milliseconds": 20.627647399902344,
+      "loss": 7.074681282043457,
+      "loss_digest": "935df54fdee7cb4dc0c80bfe40a10c1b910da46998c7604da4e12c36ecd72c89"
+    }
+  ],
+  "median_ms": 15.407311916351318,
+  "parameter_digests": {
+    "embedding.word_embeddings.weight": "d70d57c2996f0fe446ba9adc08f16cdc62fcdfa7afb8bf6e8d40365f20ce84e6",
+    "decoder.layers.0.mixer.conv1d_weight": "6e51f3e9388709c82a742c8db529cc4e3b69f870dc0ffff9e89c2e2c603628d9",
+    "decoder.layers.0.mixer.conv1d_bias": "0adec40c4695ec469be09a075b011ee2333736f304cc4554b64c7d840b16cd40",
+    "decoder.layers.0.mixer.dt_bias": "3c03d2392123c87f001778c4acd676676fbbe0e7f33510f941cdc9b630f0669c",
+    "decoder.layers.0.mixer.A_log": "b8924df105d0ee28318f371d7645ecfb69dfa5a57dc8a3e37df7058759c63b18",
+    "decoder.layers.0.mixer.D": "1ede9ebfa1ad011b89a3e3df648a958674d64afa0726d98858a68b8a4da14ee0",
+    "decoder.layers.0.mixer.in_proj.layer_norm_weight": "8676bed4ca36c6e3328f5eaebc71b2f1a6c760c56f7139942239a033fe776c5e",
+    "decoder.layers.0.mixer.in_proj.weight": "64e33f307cbd43dca852378632028be9b7a0bd9abb68a411698b0de182768f04",
+    "decoder.layers.0.mixer.norm.weight": "604eec62a79939ae630b51da811693679c5a9ed3c7fbf49e6699628ad44c1eda",
+    "decoder.layers.0.mixer.out_proj.weight": "af35cf52d4e3ce44dd39d0d4a3d9fa42adb0f7b6e9e60d67d3de3cc66eaadea3",
+    "decoder.final_norm.weight": "8676bed4ca36c6e3328f5eaebc71b2f1a6c760c56f7139942239a033fe776c5e",
+    "output_layer.weight": "57da5b1cb4691d0d2d6d35f5b8bd36de3531659cc02a2309779c36b428a16993"
+  },
+  "gradient_digests": {
+    "embedding.word_embeddings.weight": "de5072518223599d74a42fa2a8b054236009025a572e14b9716d4968c84b2630",
+    "decoder.layers.0.mixer.conv1d_weight": "c915655f70370f68404c8c44d7f1dbe79fd79b9a5b92e094557b33d3c9391881",
+    "decoder.layers.0.mixer.conv1d_bias": "09f0be998b05fd8a995f35d44f6e9ee38bdb87d48ea2edc250a1a5c0d5688940",
+    "decoder.layers.0.mixer.dt_bias": "da81826f3a619f79042e7ea3e074f47a9cddfc0dc4227092aa3d3a1637b41a21",
+    "decoder.layers.0.mixer.A_log": "fec1a35fd4cdf218ede4ebd8db6a5dc01f15ad94ba300d698f97e3663fa21b3b",
+    "decoder.layers.0.mixer.D": "5a399b79d70e78c86ca458871e26951fab2ff2a4eb328013d52aa06b24c17e7c",
+    "decoder.layers.0.mixer.in_proj.layer_norm_weight": "4b48e60605bee66213c72f40faf3c5da763a215d05f9a63db5f0d3b667c35dd4",
+    "decoder.layers.0.mixer.in_proj.weight": "5d542b1be9a0dfd83aa1c0c28022f11a28ca7bfd58c821866127d810201f4a4d",
+    "decoder.layers.0.mixer.norm.weight": "23b8d67a50b59dc54ab8b6f68d377596534885b8177d75593808ef65d31d3b41",
+    "decoder.layers.0.mixer.out_proj.weight": "9a5f74ee8af4a48cb6f7183474cf0433e619ff09bae00dfce7087d3b3d62449e",
+    "decoder.final_norm.weight": "d639285f24b7d0636dd4a783e28e578ae3f889242e16c97b281e8a829c0f86e7",
+    "output_layer.weight": "c2c6b509f640d53aa27533d4c81f312afcfe48352b388420bcb1647e17f3ea2b"
+  },
+  "choices": {
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_cumsum_fwd_kernel|chunk_size=128|nheads=128|torch.bfloat16|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_H\": 16}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_state_fwd_kernel|hdim=64|dstate=128|chunk_size=128|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 2};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_state_passing._state_passing_fwd_kernel|dim=8192|torch.float32|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE\": 512}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_bmm._bmm_chunk_fwd_kernel|chunk_size=128|K=128|IS_CAUSAL=False|torch.bfloat16|torch.bfloat16|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 128, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_fwd_kernel|chunk_size=128|hdim=64|dstate=128|IS_CAUSAL=True|torch.float32|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 32, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 5, \"num_warps\": 2};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_state_passing._state_passing_fwd_kernel|dim=8192|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE\": 1024}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dz_kernel|chunk_size=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dstates_kernel|hdim=64|dstate=128|chunk_size=128|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_state_passing._state_passing_bwd_kernel|dim=8192|torch.float32|torch.float32|torch.float32|torch.bfloat16|torch.float32|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE\": 512}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_combined._chunk_scan_chunk_state_bwd_dx_kernel|chunk_size=128|hdim=64|dstate=128|torch.bfloat16|torch.float32|torch.bfloat16|torch.float32|torch.float32|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 32, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 5, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_state_bwd_db_kernel|chunk_size=128|dstate=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 128, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dc_kernel|chunk_size=128|dstate=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dcb_kernel|chunk_size=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_bmm._bmm_chunk_bwd_kernel|chunk_size=128|K=128|torch.bfloat16|torch.float32|torch.bfloat16|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_CS\": 32, \"BLOCK_SIZE_M\": 128, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_ddAcs_stable_kernel|chunk_size=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 32}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_cumsum_bwd_kernel|chunk_size=128|nheads=128|torch.float32|torch.float32|torch.bfloat16|torch.float32|torch.float32|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_H\": 8}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned"
+  },
+  "choice_digest": "6b9a641eff06be62429e72f994ee8df3",
+  "meta": {
+    "torch": "2.14.1+cu130",
+    "triton": "3.8.0",
+    "cuda": "13.0",
+    "device": "NVIDIA GH200 480GB",
+    "seq": 2048,
+    "vocab": 512,
+    "seed": 1234,
+    "family_config": {
+      "num_layers": "1",
+      "hidden_size": "4096",
+      "num_attention_heads": "32",
+      "use_cpu_initialization": "True",
+      "bf16": "True",
+      "params_dtype": "torch.bfloat16",
+      "pipeline_dtype": "torch.bfloat16",
+      "hidden_dropout": "0.0",
+      "attention_dropout": "0.0",
+      "deterministic_mode": "True",
+      "gradient_accumulation_fusion": "False",
+      "normalization": "RMSNorm",
+      "add_bias_linear": "False",
+      "mamba_state_dim": "128",
+      "mamba_head_dim": "64",
+      "mamba_num_groups": "8"
+    },
+    "table_sha256": "e6e328449a54ec15d04f76b424e1378aee4fda43ec022101781749f4eacb94b8",
+    "scope": "synthetic full-model forward/backward/SGD; no convergence claim"
+  }
+}

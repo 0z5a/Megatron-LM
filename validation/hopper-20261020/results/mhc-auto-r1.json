@@ -1,0 +1,193 @@
+{
+  "family": "mhc",
+  "mode": "auto",
+  "steps": [
+    {
+      "step": 0,
+      "warmup": true,
+      "milliseconds": 22645.15625,
+      "loss": 6.80756950378418,
+      "loss_digest": "cbccb2ba9d9458c50dbf1386dfd6410a94be4b16191be265abc0f0c020ee3868"
+    },
+    {
+      "step": 1,
+      "warmup": true,
+      "milliseconds": 24.91142463684082,
+      "loss": 6.807554244995117,
+      "loss_digest": "b28a7ef3588b34503fec79705095a2c9bfa348ed3c04e6b986ba5c4f761380cb"
+    },
+    {
+      "step": 2,
+      "warmup": true,
+      "milliseconds": 14.748479843139648,
+      "loss": 6.807405948638916,
+      "loss_digest": "c8f57fa8e6cf3e0bb7241c230ec92d4cf05ef6ef5ebbe2a283a832c7ecafe2f2"
+    },
+    {
+      "step": 3,
+      "warmup": true,
+      "milliseconds": 14.668000221252441,
+      "loss": 6.807409763336182,
+      "loss_digest": "81cbb130ba4b3e89fdbf5667e18775612bb0583d3358cf707294aae56e2f7562"
+    },
+    {
+      "step": 4,
+      "warmup": false,
+      "milliseconds": 14.28217601776123,
+      "loss": 6.80748176574707,
+      "loss_digest": "bcc65de23a710a4cc46f3882f39835ede2883c62c1c2808afde4dfcbbd3896c4"
+    },
+    {
+      "step": 5,
+      "warmup": false,
+      "milliseconds": 13.007552146911621,
+      "loss": 6.807365417480469,
+      "loss_digest": "c050036da3b1dc012af08c37ef82af629f19fc0d68c5f13b8ac7f2eaf76cdcdf"
+    },
+    {
+      "step": 6,
+      "warmup": false,
+      "milliseconds": 12.63644790649414,
+      "loss": 6.807279109954834,
+      "loss_digest": "f96391f0a57c205561950661c9060a2546d8c35c0bceec80bd9f6e3fce6b26c8"
+    },
+    {
+      "step": 7,
+      "warmup": false,
+      "milliseconds": 12.465951919555664,
+      "loss": 6.80735445022583,
+      "loss_digest": "7dac6989020f2e05a433f1fdc76d40c032b67167b90297d51238cca4e9c94871"
+    },
+    {
+      "step": 8,
+      "warmup": false,
+      "milliseconds": 13.092127799987793,
+      "loss": 6.807387351989746,
+      "loss_digest": "8b8dd707c9c466e0a21296b67fcddf5f3dc71094794194f99dc9327ccd2f30c2"
+    },
+    {
+      "step": 9,
+      "warmup": false,
+      "milliseconds": 12.85696029663086,
+      "loss": 6.807387828826904,
+      "loss_digest": "cbd1ee8cc07856d8d64a8f41ad85420b5927b17bc385d442f96ffc2ac61d4b25"
+    },
+    {
+      "step": 10,
+      "warmup": false,
+      "milliseconds": 24.024703979492188,
+      "loss": 6.807467460632324,
+      "loss_digest": "1717f4dddc64549f86c3384cc9305c64a6274720baa7b9aa8419573216a976bf"
+    },
+    {
+      "step": 11,
+      "warmup": false,
+      "milliseconds": 12.20963191986084,
+      "loss": 6.80738639831543,
+      "loss_digest": "ae26e421fca5e8ef0ffa4c5894eb3654ade832ead382c4be0ce98b5d5bb695b1"
+    },
+    {
+      "step": 12,
+      "warmup": false,
+      "milliseconds": 12.552576065063477,
+      "loss": 6.8074421882629395,
+      "loss_digest": "b33fa24b62af8f02a2afabd504245fbad530434a25be9487e6abd646f4e4b376"
+    },
+    {
+      "step": 13,
+      "warmup": false,
+      "milliseconds": 12.563039779663086,
+      "loss": 6.80742073059082,
+      "loss_digest": "e2b059827fc43599e181688ae0c17be54f9c9718a21a5e49eefe088fcb26f40a"
+    }
+  ],
+  "median_ms": 12.7467041015625,
+  "parameter_digests": {
+    "embedding.word_embeddings.weight": "02e2645ef76c7c83b3e537d92c175044dab39b9e56846ddccccc1a4b663693b7",
+    "decoder.hc_head_fn": "a3aafeade8f0235bba68ef1c83f55765201c7c5a2300fecaff9c770f7b929268",
+    "decoder.hc_head_base": "0bb040544a9fd137768d810989b85edc8dc0dbf72a5b6626187e6ad79e13c6dd",
+    "decoder.hc_head_scale": "b9c205bdac187f20bf876cea369cb6032ad1bf69043b31d716b36b8defbffdf2",
+    "decoder.layers.0.inner_layer.mlp.linear_fc1.layer_norm_weight": "a44881ff6ccb48b5e2d84273d90a682dd6a2de3bc91a886aa52c59c3fdf6dc1d",
+    "decoder.layers.0.inner_layer.mlp.linear_fc1.weight": "8ae7e73d22350eb416b2dfac9cf8bfd8737a50e0b49e7627c38bd74429c49b7e",
+    "decoder.layers.0.inner_layer.mlp.linear_fc2.weight": "3faa5dd2756671d0428adff61f01ce37163ee4d20be85048a03344f4db35aa46",
+    "decoder.layers.0.hyper_connection.alpha_pre": "4d6e9cc6c147c8aba1f5e8b230e5bcd56751d164935efb9b1f16f927a85e90f1",
+    "decoder.layers.0.hyper_connection.alpha_post": "4d6e9cc6c147c8aba1f5e8b230e5bcd56751d164935efb9b1f16f927a85e90f1",
+    "decoder.layers.0.hyper_connection.alpha_res": "4d6e9cc6c147c8aba1f5e8b230e5bcd56751d164935efb9b1f16f927a85e90f1",
+    "decoder.layers.0.hyper_connection.bias": "dc81634c56b95e8f91257e9ea5358ec9654f651012253c04a418b6b2eba4a56a",
+    "decoder.layers.0.hyper_connection.mapping_proj.weight": "407680d4c98984d1c17db7236165c6f07ef2f30fe9b37a23c9ccd846c71cb46d",
+    "decoder.layers.1.inner_layer.mlp.linear_fc1.layer_norm_weight": "a44881ff6ccb48b5e2d84273d90a682dd6a2de3bc91a886aa52c59c3fdf6dc1d",
+    "decoder.layers.1.inner_layer.mlp.linear_fc1.weight": "1b2fb59e59ef3521ee68cd81c06d8727027a92fc391e4ab8e63ccc7db1f41926",
+    "decoder.layers.1.inner_layer.mlp.linear_fc2.weight": "881591a6f3e8a243524bdc4f4340972a869b7ce584eb88d15dc6c712a7f84815",
+    "decoder.layers.1.hyper_connection.alpha_pre": "4d6e9cc6c147c8aba1f5e8b230e5bcd56751d164935efb9b1f16f927a85e90f1",
+    "decoder.layers.1.hyper_connection.alpha_post": "4d6e9cc6c147c8aba1f5e8b230e5bcd56751d164935efb9b1f16f927a85e90f1",
+    "decoder.layers.1.hyper_connection.alpha_res": "4d6e9cc6c147c8aba1f5e8b230e5bcd56751d164935efb9b1f16f927a85e90f1",
+    "decoder.layers.1.hyper_connection.bias": "2b398d0425f14c80f2c168643bbf2641814ac7649d84f433a5741bb9a49193a5",
+    "decoder.layers.1.hyper_connection.mapping_proj.weight": "99ee9ef6dc0927a5e1de6e2a3414ab21dc929478e8ebb0b68caa24695dca47fd",
+    "decoder.final_norm.weight": "a44881ff6ccb48b5e2d84273d90a682dd6a2de3bc91a886aa52c59c3fdf6dc1d",
+    "output_layer.weight": "1de62d801fb017560e16612adffeb8e3b0dd80b8087ec64dcaa552c9cef1eb33"
+  },
+  "gradient_digests": {
+    "embedding.word_embeddings.weight": "db3a801f329c786e5a7fd785e921b9e95113cc9849d5d6049e23ef042e837ac3",
+    "decoder.hc_head_fn": "3ac11c8935390f4f3ac909a051ca69483f01d18b36ec365117e370c9b1cea59f",
+    "decoder.hc_head_base": "f900040820809f47d7c1f9db97208bf68b70e6951a041c69158a2174c62fb6a5",
+    "decoder.hc_head_scale": "81cd0ea08437675ad2a78672ff6989c22979015eee8328995e240612123ce5cc",
+    "decoder.layers.0.inner_layer.mlp.linear_fc1.layer_norm_weight": "c956fc3fa3647f5f76d6970078b2564ef1a5176758592e76e112efffe209d2b1",
+    "decoder.layers.0.inner_layer.mlp.linear_fc1.weight": "61ff46aa37474c56baaed1dee012a2e76b2cc8bb83ab83329b99da1e1e36dbee",
+    "decoder.layers.0.inner_layer.mlp.linear_fc2.weight": "2739202c651bc20105daf272ac3ca386d6595ad2200ced6f3ef36b1460bb09e8",
+    "decoder.layers.0.hyper_connection.alpha_pre": "be64e2dee318879cd8a468fda45ee34d6da9bca2521fcada9a35c9b8e0a74cae",
+    "decoder.layers.0.hyper_connection.alpha_post": "564735e7b244c2e7aff5fb6153a617bef0e57279bf950fa266442dbf0bb45064",
+    "decoder.layers.0.hyper_connection.alpha_res": "a2fa92b359d04729501110991d8e343a7dd374357ef4bb4c6c5993b7c481a895",
+    "decoder.layers.0.hyper_connection.bias": "ee8dd7caca575539ec3b6a9e22caae5753409dbe08510cf7a8a265b969aead94",
+    "decoder.layers.0.hyper_connection.mapping_proj.weight": "b21d9fd9753bbf7069ff51c8e7a46414a1c185cd122fa091c75d07b0759ae5cc",
+    "decoder.layers.1.inner_layer.mlp.linear_fc1.layer_norm_weight": "e0cf158cd37cecb14a40ee8b3533a13d32f0e6d110206aa1f2ce3ad6683ced7f",
+    "decoder.layers.1.inner_layer.mlp.linear_fc1.weight": "ac3b748e90ec17234f90c92a7f14a1bfb6c7a64d36dd0149d84ecc2360f4c241",
+    "decoder.layers.1.inner_layer.mlp.linear_fc2.weight": "b36e601f676a6cb429a727dacf6d4143209f706c6f2b15f19925bf60e1055a20",
+    "decoder.layers.1.hyper_connection.alpha_pre": "03db580c06617b335e070d773deb26b90dda951641fd926b4f8189a092802db4",
+    "decoder.layers.1.hyper_connection.alpha_post": "dda911479e287282f5ebf36c035a7c8ae7e627382eaf4b07f8565ad5a89ca20d",
+    "decoder.layers.1.hyper_connection.alpha_res": "0bd73b6a1a5c68cf36d753107c01912f50ab1d5935c2fc6179f37cdaa3c5a3af",
+    "decoder.layers.1.hyper_connection.bias": "a0c898f99240d7185e0e2e2bd6e0ec377927c0c4a75c4c84d49baa9b7020b936",
+    "decoder.layers.1.hyper_connection.mapping_proj.weight": "7ca3c866d8d7c7bf0ee7a5bd22ddd1f37143541ba6f21a514454066e3040cfcf",
+    "decoder.final_norm.weight": "39a615bfb8fdaa6a9a0cdf8591f471572b5a9978ac2047e47a0c5a39cc618096",
+    "output_layer.weight": "99852e4baca4f0fd5f39ac59e67a5986b16a3e0ed27fcac498c7d67fec62b87b"
+  },
+  "choices": {
+    "sm90|megatron.core.fusions.fused_mhc_kernels._triton_sinkhorn_fwd_kernel|HC=4|NUM_ITERS=20|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 1};timed",
+    "sm90|megatron.core.fusions.fused_mhc_kernels._triton_h_agg_fwd_kernel|C=2688|N=4|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_C\": 256, \"BLOCK_S\": 4}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|megatron.core.fusions.fused_mhc_kernels._triton_hpb_fwd_kernel|C=2688|N=4|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_C\": 256, \"BLOCK_S\": 1}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 2};timed",
+    "sm90|megatron.core.fusions.fused_mhc_kernels._triton_hpb_bwd_g_x_orig_kernel|C=2688|N=4|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_C\": 128, \"BLOCK_S\": 4}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 2};timed",
+    "sm90|megatron.core.fusions.fused_mhc_kernels._triton_hpb_bwd_g_hp_hr_kernel|C=2688|N=4|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_C\": 256, \"BLOCK_S\": 8}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 8};timed",
+    "sm90|megatron.core.fusions.fused_mhc_kernels._triton_sinkhorn_bwd_kernel|HC=4|NUM_ITERS=20|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 1};timed"
+  },
+  "choice_digest": "df1ef4a8336058068473415653e252bf",
+  "meta": {
+    "torch": "2.14.1+cu130",
+    "triton": "3.8.0",
+    "cuda": "13.0",
+    "device": "NVIDIA GH200 480GB",
+    "seq": 2048,
+    "vocab": 512,
+    "seed": 1234,
+    "family_config": {
+      "num_layers": "2",
+      "hidden_size": "2688",
+      "num_attention_heads": "32",
+      "use_cpu_initialization": "True",
+      "bf16": "True",
+      "params_dtype": "torch.bfloat16",
+      "pipeline_dtype": "torch.bfloat16",
+      "hidden_dropout": "0.0",
+      "attention_dropout": "0.0",
+      "deterministic_mode": "True",
+      "gradient_accumulation_fusion": "False",
+      "normalization": "RMSNorm",
+      "add_bias_linear": "False",
+      "ffn_hidden_size": "7168",
+      "enable_mhc_connections": "True",
+      "mhc_num_residual_streams": "4",
+      "use_fused_mhc": "True",
+      "mhc_fused_backend": "triton"
+    },
+    "table_sha256": "e6e328449a54ec15d04f76b424e1378aee4fda43ec022101781749f4eacb94b8",
+    "scope": "synthetic full-model forward/backward/SGD; no convergence claim"
+  }
+}

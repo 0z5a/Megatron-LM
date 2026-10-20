@@ -1,0 +1,7 @@
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+38.9,126600608,20,6330030.4,4904192.0,1645728,20830336,5480398.3,PushPop,:ce.unfused.torch.float32
+23.9,77781856,20,3889092.8,1894304.0,1271200,15059168,4059205.1,PushPop,:ce.fused.torch.float32
+20.3,66117760,20,3305888.0,2022416.0,1151104,13892928,3081800.0,PushPop,:ce.fused.torch.bfloat16
+16.4,53531712,20,2676585.6,2275248.0,1634592,6961280,1288383.5,PushPop,:ce.unfused.torch.bfloat16
+0.6,1820416,200,9102.1,6032.0,2464,180096,16285.3,PushPop,NCCL:ncclAllReduce
+

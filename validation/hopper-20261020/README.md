@@ -94,7 +94,49 @@ The helper must run against the frozen source **without a packaged sm90
 table**, so its `cheapest` control really uses the fallback. Use the external
 candidate directory only for the `table` mode.
 
-Model-step performance, the full aarch64 unit inventory, and the CE profile
-will be added after their finite queues finish and the evidence is audited.
+The 27 model-step cases completed with finite losses, no foreign GPU process,
+and 94 original files independently SHA256-verified. The candidate **does not
+pass the preregistered model qualification**:
+
+| Family | Table-mode loss/parameter/gradient digests across three processes | Table/auto step-time ratio, paired 95% interval |
+| --- | --- | --- |
+| MLA | One of three processes differs | 1.120 [0.495, 2.531] |
+| mHC | Equal | 1.484 [0.642, 3.429] |
+| SSD | Equal | 0.972 [0.697, 1.356] |
+
+All three table-mode configuration digests match across processes. The MLA
+mismatch therefore is not explained by a different recorded table choice.
+The auto SSD control also varies in losses/parameters/gradients. No family
+meets the frozen upper-confidence-bound <= 1.05 timing gate. The intervals
+are paired Student-t intervals on log median-step ratios (n=3, df=2); these
+small, noisy samples do not establish a performance improvement. A zero
+process exit code was not treated as a qualification pass. Raw per-process
+model results and `model-step-comparison-audit.json` preserve these negatives.
+
+The full aarch64 unit inventory is being continued after a data-preprocessing
+worker timeout; a completed first collection is not reported as a suite pass.
 
 The table builder is `scripts/build_candidate.py`. It excludes invalid/nonpositive candidate timings, rejects mixed-runtime merges, and uses each case's fastest valid candidate as the slowdown denominator. `results/gh200-sweep.json` preserves the complete recorded candidate data; `results/sm90-gh200-candidate.json` is the exact independently replayed candidate. These recording-time estimates are not held-out performance results.
+
+## CE performance on GH200
+
+The profiled and independent unprofiled runs use TP1, 2048 tokens, 32768
+vocabulary entries per rank, bf16/fp32, and fused/unfused CE. Reference loss
+and gradient checks passed. The corrected helper clears
+`torch.utils.deterministic.fill_uninitialized_memory`, matching Megatron's
+deterministic setup. Original fill-on controls are retained in the execution
+archive but are not mixed into the results below.
+
+Each unprofiled mode ran in three cold processes, with eight warmup and 50
+measured forward/backward iterations. The mode order alternated by repeat.
+The geometric mean of the three paired strict/default median-time ratios was
+1.337 for bf16 fused CE and 1.539 for fp32 fused CE. Two-sided 95% Student-t
+intervals on the three log ratios were [0.930, 1.921] and [1.236, 1.917],
+respectively. The small sample and observed variation do not support a claim
+of negligible overhead. These are component times, not training-step times.
+
+The Nsight NVTX CSVs are included separately; profiler instrumentation affects
+the timings. The original wrapper terminated torchrun when the capture range
+ended and never reached the second mode. The one-line fix in
+[PR #8382](https://github.com/NVIDIA/Megatron-LM/pull/8382) lets the target exit
+normally; both profile reports and GPU-kernel/NVTX exports then completed.

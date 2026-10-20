@@ -1,0 +1,181 @@
+{
+  "family": "ssd",
+  "mode": "auto",
+  "steps": [
+    {
+      "step": 0,
+      "warmup": true,
+      "milliseconds": 15127.662109375,
+      "loss": 7.074718475341797,
+      "loss_digest": "5f6ae2df4fbffe1273b6aa823128a304a64fddbee2b05a2343aec704b5d53ef3"
+    },
+    {
+      "step": 1,
+      "warmup": true,
+      "milliseconds": 25.26780891418457,
+      "loss": 7.074647903442383,
+      "loss_digest": "0d197c7afd8ffa5d6a2b1691354c200400b6fc88acd82d4350a48c52945abdc1"
+    },
+    {
+      "step": 2,
+      "warmup": true,
+      "milliseconds": 17.471616744995117,
+      "loss": 7.074628829956055,
+      "loss_digest": "28fe087d375ddb7cd9d281e5b69b90ea52c11c50caf5162b80df2d9f690f6fda"
+    },
+    {
+      "step": 3,
+      "warmup": true,
+      "milliseconds": 13.28121566772461,
+      "loss": 7.074610233306885,
+      "loss_digest": "2275fa003295f016db09c8feafa96c4f226d3f600ad17d06c0553c27c452419d"
+    },
+    {
+      "step": 4,
+      "warmup": false,
+      "milliseconds": 13.943488121032715,
+      "loss": 7.0745954513549805,
+      "loss_digest": "f41d5186a9dd5a35f1717dec4c949c45767abe90f03b2f76f829be661cbc52c5"
+    },
+    {
+      "step": 5,
+      "warmup": false,
+      "milliseconds": 13.52575969696045,
+      "loss": 7.074587821960449,
+      "loss_digest": "916a0fc151192f398d6116b685b696bc32433281ebd69f97ce43ad55f2b386aa"
+    },
+    {
+      "step": 6,
+      "warmup": false,
+      "milliseconds": 18.943328857421875,
+      "loss": 7.074647903442383,
+      "loss_digest": "0d197c7afd8ffa5d6a2b1691354c200400b6fc88acd82d4350a48c52945abdc1"
+    },
+    {
+      "step": 7,
+      "warmup": false,
+      "milliseconds": 14.93932819366455,
+      "loss": 7.0746965408325195,
+      "loss_digest": "c9057c6ebb4fc9785aebcb998ba794ea34b49a3d44860e1ad6d9d959dcb9d951"
+    },
+    {
+      "step": 8,
+      "warmup": false,
+      "milliseconds": 12.50278377532959,
+      "loss": 7.074679851531982,
+      "loss_digest": "6083410bb4d7335ed8c28d05df610ed0f002db62b296d6e700a040a35ca75690"
+    },
+    {
+      "step": 9,
+      "warmup": false,
+      "milliseconds": 12.243200302124023,
+      "loss": 7.074626922607422,
+      "loss_digest": "3852c9edda46611741720fb326da31f5d4d98439fec6974c229b39e363fe6e42"
+    },
+    {
+      "step": 10,
+      "warmup": false,
+      "milliseconds": 12.433600425720215,
+      "loss": 7.074629783630371,
+      "loss_digest": "cfac41bdf17415b3f6746048d852be3f7eba7f5775c7efdf7ea0ba528dd997d6"
+    },
+    {
+      "step": 11,
+      "warmup": false,
+      "milliseconds": 12.5098237991333,
+      "loss": 7.074619293212891,
+      "loss_digest": "ddc605c661f87e39a1201cdca6cea2aea21b8ace8cccac01aa9571852ffff966"
+    },
+    {
+      "step": 12,
+      "warmup": false,
+      "milliseconds": 18.238271713256836,
+      "loss": 7.074654579162598,
+      "loss_digest": "d331a88407a509860592b9bb69cdf52e82b9bbd7f9fa6e29e77e58edd5579936"
+    },
+    {
+      "step": 13,
+      "warmup": false,
+      "milliseconds": 24.70537567138672,
+      "loss": 7.074690818786621,
+      "loss_digest": "344d3e0010ae5853a8cc0d3a3c6b3e8229d7394a2bab1f52a0cfbc0e40406aec"
+    }
+  ],
+  "median_ms": 13.734623908996582,
+  "parameter_digests": {
+    "embedding.word_embeddings.weight": "b0a0bfe6cab37de8c876d3f95b62908d390c0d328dc8e6dde5d70a196cd8789d",
+    "decoder.layers.0.mixer.conv1d_weight": "6e51f3e9388709c82a742c8db529cc4e3b69f870dc0ffff9e89c2e2c603628d9",
+    "decoder.layers.0.mixer.conv1d_bias": "0adec40c4695ec469be09a075b011ee2333736f304cc4554b64c7d840b16cd40",
+    "decoder.layers.0.mixer.dt_bias": "3c03d2392123c87f001778c4acd676676fbbe0e7f33510f941cdc9b630f0669c",
+    "decoder.layers.0.mixer.A_log": "b8924df105d0ee28318f371d7645ecfb69dfa5a57dc8a3e37df7058759c63b18",
+    "decoder.layers.0.mixer.D": "1ede9ebfa1ad011b89a3e3df648a958674d64afa0726d98858a68b8a4da14ee0",
+    "decoder.layers.0.mixer.in_proj.layer_norm_weight": "8676bed4ca36c6e3328f5eaebc71b2f1a6c760c56f7139942239a033fe776c5e",
+    "decoder.layers.0.mixer.in_proj.weight": "e9200bb0ab01b041b6928bbcd2f1060c870084d9120ce6c43d4cce99b83350c8",
+    "decoder.layers.0.mixer.norm.weight": "604eec62a79939ae630b51da811693679c5a9ed3c7fbf49e6699628ad44c1eda",
+    "decoder.layers.0.mixer.out_proj.weight": "656e8ac688589fb8c96edf819e6be01e37e0fb4a21e41df625e6c2665acc1a8c",
+    "decoder.final_norm.weight": "8676bed4ca36c6e3328f5eaebc71b2f1a6c760c56f7139942239a033fe776c5e",
+    "output_layer.weight": "648255c505616249ea7d0529ff3c5c9e3ded222bfcb649a78dd7f731aaa06e90"
+  },
+  "gradient_digests": {
+    "embedding.word_embeddings.weight": "d6f65ac61847d61022f7aa428c3393bc7b66be7d36bf068e1abfe0f79aa4db14",
+    "decoder.layers.0.mixer.conv1d_weight": "e122cb655f7ef33636a6640cc4863733eb73b2a837629d22e16bf54016b6fca7",
+    "decoder.layers.0.mixer.conv1d_bias": "613edc1981a509fac4d2952663789ed01dce9c303aa6e4db1aed7b2f45974576",
+    "decoder.layers.0.mixer.dt_bias": "b27527a9bcc4acd3d43be4dcd2db203819a3bd85859cef126d5bf35493d67c99",
+    "decoder.layers.0.mixer.A_log": "0259b3da21c64a539d5c192e0c73935e323541f459bc4f96ff4b8ebe6219ec36",
+    "decoder.layers.0.mixer.D": "c1b38f81489d1bddbe496892402653800670309e250d2159c06d53020de34e03",
+    "decoder.layers.0.mixer.in_proj.layer_norm_weight": "885758ac30c9bced6f5659eb9300f3dd6881024d959a1e49064df5aceb761188",
+    "decoder.layers.0.mixer.in_proj.weight": "f5463be348c1d92104d40e908b2e5bd90379cb6bd5855a0f1c198735b1045fe8",
+    "decoder.layers.0.mixer.norm.weight": "5985e2238575ee4fcbda880cf35a0d7451406d1c14fba9a06adf9b379aaa67fe",
+    "decoder.layers.0.mixer.out_proj.weight": "fc03110d25ae325734638f494ba7ae5cc246b930cc81bf2dfaf1236f99d4a567",
+    "decoder.final_norm.weight": "ec5c49867475d37279fb75b74ebc07e352904ef5e966273e62e17048f024033f",
+    "output_layer.weight": "4f235c3e8911849b4ee33e9e51c9396d3df2e99dd17a39d2d1915cb746786385"
+  },
+  "choices": {
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_cumsum_fwd_kernel|chunk_size=128|nheads=128|torch.bfloat16|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_H\": 2}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_state_fwd_kernel|hdim=64|dstate=128|chunk_size=128|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_state_passing._state_passing_fwd_kernel|dim=8192|torch.float32|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE\": 512}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_bmm._bmm_chunk_fwd_kernel|chunk_size=128|K=128|IS_CAUSAL=False|torch.bfloat16|torch.bfloat16|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 128, \"BLOCK_SIZE_N\": 32}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_fwd_kernel|chunk_size=128|hdim=64|dstate=128|IS_CAUSAL=True|torch.float32|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 32, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 5, \"num_warps\": 2};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_state_passing._state_passing_fwd_kernel|dim=8192|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE\": 1024}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dz_kernel|chunk_size=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dstates_kernel|hdim=64|dstate=128|chunk_size=128|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_state_passing._state_passing_bwd_kernel|dim=8192|torch.float32|torch.float32|torch.float32|torch.bfloat16|torch.float32|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE\": 512}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_combined._chunk_scan_chunk_state_bwd_dx_kernel|chunk_size=128|hdim=64|dstate=128|torch.bfloat16|torch.float32|torch.bfloat16|torch.float32|torch.float32|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_K\": 32, \"BLOCK_SIZE_M\": 32, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 5, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_state_bwd_db_kernel|chunk_size=128|dstate=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dc_kernel|chunk_size=128|dstate=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_dcb_kernel|chunk_size=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_bmm._bmm_chunk_bwd_kernel|chunk_size=128|K=128|torch.bfloat16|torch.float32|torch.bfloat16|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_CS\": 32, \"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 64}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 4, \"num_warps\": 2};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_scan._chunk_scan_bwd_ddAcs_stable_kernel|chunk_size=128|hdim=64|torch.bfloat16|torch.bfloat16|torch.float32|torch.float32|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_M\": 64, \"BLOCK_SIZE_N\": 32}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed",
+    "sm90|mamba_ssm.ops.triton.ssd_chunk_state._chunk_cumsum_bwd_kernel|chunk_size=128|nheads=128|torch.float32|torch.float32|torch.bfloat16|torch.float32|torch.float32|torch.bfloat16|torch.float32|torch.float32": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_SIZE_H\": 4}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};timed"
+  },
+  "choice_digest": "b882dd08ec73c8b576396cec6f371c1c",
+  "meta": {
+    "torch": "2.14.1+cu130",
+    "triton": "3.8.0",
+    "cuda": "13.0",
+    "device": "NVIDIA GH200 480GB",
+    "seq": 2048,
+    "vocab": 512,
+    "seed": 1234,
+    "family_config": {
+      "num_layers": "1",
+      "hidden_size": "4096",
+      "num_attention_heads": "32",
+      "use_cpu_initialization": "True",
+      "bf16": "True",
+      "params_dtype": "torch.bfloat16",
+      "pipeline_dtype": "torch.bfloat16",
+      "hidden_dropout": "0.0",
+      "attention_dropout": "0.0",
+      "deterministic_mode": "True",
+      "gradient_accumulation_fusion": "False",
+      "normalization": "RMSNorm",
+      "add_bias_linear": "False",
+      "mamba_state_dim": "128",
+      "mamba_head_dim": "64",
+      "mamba_num_groups": "8"
+    },
+    "table_sha256": "e6e328449a54ec15d04f76b424e1378aee4fda43ec022101781749f4eacb94b8",
+    "scope": "synthetic full-model forward/backward/SGD; no convergence claim"
+  }
+}
