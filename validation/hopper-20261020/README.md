@@ -3,7 +3,7 @@
 This branch preserves a finite experiment record and reproduction helpers for
 Megatron-LM contributions. The upstream source was frozen at
 `67413f611ffb1e7d7d29cd2a61f520cffe79d995` for the cross-host and model checks.
-The CE matrix adds the test-only changes submitted in
+The CE matrix and native-only deterministic admission are submitted in
 [PR #8380](https://github.com/NVIDIA/Megatron-LM/pull/8380).
 
 The GH200 environment is a task-local aarch64 Python environment, not the
@@ -35,8 +35,8 @@ by `nvidia-smi`. Cross-host NCCL logs identified `NET/IB/0/GDRDMA` transport.
 The collective result is **not** a comparison of different Slurm allocations.
 It does not establish that topology-related reproducibility gaps are limited
 to GPUs within one node. The CE result also does not qualify other compiler
-versions, batch invariance, the TE CE backend, or removal of the production
-determinism restriction.
+versions, batch invariance, the TE CE backend, or arbitrary compiler settings. PR #8380 now permits the
+measured native path under strict algorithms while retaining the TE restriction.
 
 The first cross-host pytest launch failed because Gloo resolved a hostname to
 a loopback address. Binding `GLOO_SOCKET_IFNAME` to the inter-host interface
@@ -140,3 +140,13 @@ the timings. The original wrapper terminated torchrun when the capture range
 ended and never reached the second mode. The one-line fix in
 [PR #8382](https://github.com/NVIDIA/Megatron-LM/pull/8382) lets the target exit
 normally; both profile reports and GPU-kernel/NVTX exports then completed.
+
+## Native CE admission follow-up
+
+The updated native-only admission passed 34 parameter tests. The normal TP1
+replay invocation passed both strict cells; default cells were XPASS and TP2
+cells skipped for this single-host invocation. Three fresh processes ran four
+actual GPT forward/backward/SGD steps each with native CE enabled through
+`apply_determinism_to_args`. Input, initial and final parameters, gradients and
+loss digests all matched. `native-ce-admission-audit.json` binds the exact
+changed-source hashes and 12 independently verified original files.

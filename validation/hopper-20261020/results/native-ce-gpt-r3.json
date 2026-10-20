@@ -1,0 +1,77 @@
+{
+  "input": "fd1c90c0517cf0e73f068b7ddf19ed9bccc4212490a8d3b28fb561fbf693e650",
+  "initial_parameters": {
+    "embedding.word_embeddings.weight": "1d4be8cf2881f3c4c23c95b612dc3d23084b8ef06dfca99ab36e128f62257104",
+    "decoder.layers.0.self_attention.linear_proj.weight": "675b9d679e901c931bbd93389a0fd64255ec78d833292821a134ced428cc6932",
+    "decoder.layers.0.self_attention.linear_proj.bias": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+    "decoder.layers.0.self_attention.linear_qkv.layer_norm_weight": "8e6b548203bfc0860b22f197dbde1c838d15e2654555143cb6dfa88e0e2bcac2",
+    "decoder.layers.0.self_attention.linear_qkv.layer_norm_bias": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+    "decoder.layers.0.self_attention.linear_qkv.weight": "40f12cf84d8378b541ddd3a427903acde7dcf10ad70915d396b8e02d681bc49c",
+    "decoder.layers.0.self_attention.linear_qkv.bias": "80422bc3d307b4a25bdafcc84ac7fb01cb55a09810e8b0f37bb12e0edb5c48ca",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_weight": "8e6b548203bfc0860b22f197dbde1c838d15e2654555143cb6dfa88e0e2bcac2",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_bias": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+    "decoder.layers.0.mlp.linear_fc1.weight": "9f7368a9d583c72888bd96a61cb5ca7577ce036b9eabeb281eb63a6c839e60fe",
+    "decoder.layers.0.mlp.linear_fc1.bias": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+    "decoder.layers.0.mlp.linear_fc2.weight": "e234745d445b35975f2d6e108a8424e8a7102a4a4fcc76eda56da764e778d6f9",
+    "decoder.layers.0.mlp.linear_fc2.bias": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+    "decoder.final_layernorm.weight": "8e6b548203bfc0860b22f197dbde1c838d15e2654555143cb6dfa88e0e2bcac2",
+    "decoder.final_layernorm.bias": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+    "output_layer.weight": "b7babc4c0458462c6e3ad80ff57fda6834dc28016684d40d037aea330606c386"
+  },
+  "losses": [
+    {
+      "value": 8.386638641357422,
+      "digest": "51343381abee2829a2f914299d01a66d7b22711085d1743510bb1cb0577af3a4"
+    },
+    {
+      "value": 8.386611938476562,
+      "digest": "3908be43440ba768176206e33579131074208c3eae2c2ee8f8bd8ae6509f6b67"
+    },
+    {
+      "value": 8.386539459228516,
+      "digest": "4513bac5563b7d80ed1354596f2f694838775b0c576d84c6d1267eaffbe62d48"
+    },
+    {
+      "value": 8.386322021484375,
+      "digest": "126cd902403afa988508e96508cf4a72397e829f131e5343743264e969af70a0"
+    }
+  ],
+  "parameters": {
+    "embedding.word_embeddings.weight": "f391d1ebb426716a1a7d640268318e1757fb4556dab96eff1c71d3d098305561",
+    "decoder.layers.0.self_attention.linear_proj.weight": "e0ab8a44bf345b0e92d2c81ba270620930325959a3a38589b88f09230da8dd40",
+    "decoder.layers.0.self_attention.linear_proj.bias": "531a6b2d31c04c01f66723c3d0ccd970b8c93c10048aafc037a7f25400874ec3",
+    "decoder.layers.0.self_attention.linear_qkv.layer_norm_weight": "8e6b548203bfc0860b22f197dbde1c838d15e2654555143cb6dfa88e0e2bcac2",
+    "decoder.layers.0.self_attention.linear_qkv.layer_norm_bias": "290e326c92848eb19599a66fc38f2dd73aa6c40f508c7c7bdb8c1f2d0a0c35cf",
+    "decoder.layers.0.self_attention.linear_qkv.weight": "492ec100adfc70c704c269b661f693d9c18abf21d59fe2eda8fc4679c2471505",
+    "decoder.layers.0.self_attention.linear_qkv.bias": "87d7cd521307f43aff55a79d24870f18341ffb5f5a79209c7c710f35ac997e6f",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_weight": "8e6b548203bfc0860b22f197dbde1c838d15e2654555143cb6dfa88e0e2bcac2",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_bias": "15567612cbff42874236065d913422983484328e556f2b3d6910c0a3d8eb9df7",
+    "decoder.layers.0.mlp.linear_fc1.weight": "d3a31ec16836f9a18d636b1c520a34fedfd366390d6dfa886ba3f25272512cba",
+    "decoder.layers.0.mlp.linear_fc1.bias": "919a58ecc9e90df3c43d4de7a8f29a124410e1b6507ed5971d6e6163ec086cf2",
+    "decoder.layers.0.mlp.linear_fc2.weight": "3442073f4b9e5f6714e600976f98f5666078f1d0957ac7490e5f0a85cdb8bc9c",
+    "decoder.layers.0.mlp.linear_fc2.bias": "5ad4dd0b4bd708b20b87ddabe02aba60d140d4a034af4c8a4254b337adb1d31b",
+    "decoder.final_layernorm.weight": "8e6b548203bfc0860b22f197dbde1c838d15e2654555143cb6dfa88e0e2bcac2",
+    "decoder.final_layernorm.bias": "89b2eff9b9708562004d959368c3c5f6b7dccdba6331d97fa69c75506cbb7989",
+    "output_layer.weight": "e0481134e7ac7b896c7ed4d36426596455f5659f9a97dfd2cad557de76033e94"
+  },
+  "gradients": {
+    "embedding.word_embeddings.weight": "85f1057e5a9acdd7cb4d719d4103324197aa4808be0468835abad4f70499f85d",
+    "decoder.layers.0.self_attention.linear_proj.weight": "cafe7f0e76e151dcb6b76365a9fd8ae5717631f0cccb7ae2383034eced950118",
+    "decoder.layers.0.self_attention.linear_proj.bias": "cae6df2f51cf5368480356b38fde203fa8e1d8ddf62e21ff9cba79b1e93b3c76",
+    "decoder.layers.0.self_attention.linear_qkv.layer_norm_weight": "b15dd291c4ab2b264f0f7269657523ac1b9ebbd5a99c82425606b5e07a27e7e7",
+    "decoder.layers.0.self_attention.linear_qkv.layer_norm_bias": "77881284046c87873c2e5092ae949a25204d342ffe255df39d699c8f6e9f7227",
+    "decoder.layers.0.self_attention.linear_qkv.weight": "8c50767be84970ae90c87704aba3de1a149b49d0466a41c7b82036bdf38667e4",
+    "decoder.layers.0.self_attention.linear_qkv.bias": "60d49ad10ad5ba7b2d00551acbc904569f273e5910b0d839e3ad97029a5a3414",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_weight": "4be1c7e3bf65569c0363b8162f24c22fbfa7d0706177c1542220ac71c287cc49",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_bias": "7977bd3bd3cad4612323488537ed114ea2b59f0c2c7c70b908ddc1a9f9473b90",
+    "decoder.layers.0.mlp.linear_fc1.weight": "c750311956c251551c1591f4e2fb1bf5816a9d85fddf0350ffd3a90d82924fdd",
+    "decoder.layers.0.mlp.linear_fc1.bias": "c538705b8eb84cfcfa9d1e7ce1141b9a4b77ddb3d5fc3090d55f2d95b8a59320",
+    "decoder.layers.0.mlp.linear_fc2.weight": "c556537f5ad1081b80a622d557f38ca761dede56e8dae337aa732a64ef8cd5c5",
+    "decoder.layers.0.mlp.linear_fc2.bias": "7889ec69ec6e6e20de2575d69bb6fedda6f3dde0aabe8eae1b3cc4099e961cc9",
+    "decoder.final_layernorm.weight": "8315c13753553f4ba3754ef17f40947f559f6f228c3f1095f08f4456949d7449",
+    "decoder.final_layernorm.bias": "ad2d9aa515807501c8487474867ea0aaae29b7a119ee2896e7ed7f0be36cd0b8",
+    "output_layer.weight": "60f0e08dce5877c77313855923b279706b8c5f83d341a9dfd5ca4306b784af63"
+  },
+  "strict": true,
+  "fill_uninitialized_memory": false
+}

@@ -1,0 +1,19 @@
+{
+  "verified_files": 12,
+  "argument_tests_passed": 34,
+  "strict_tp1_cells_passed": 2,
+  "tp2_skipped_on_single_host": 4,
+  "default_xpass": 2,
+  "model_independent_processes": 3,
+  "model_steps_each": 4,
+  "model_all_results_identical": true,
+  "native_enabled": true,
+  "te_enabled": false,
+  "source_files": {
+    "megatron/training/determinism.py": "be5d53a7d9325cee0c141654e5cae022578d8c777634e9b8a7577af4931e01cb",
+    "tests/unit_tests/training/test_determinism_args.py": "7fb5ec23b1987396543d4b14848273ef4555b9a3d3664836ba0231dbb43b4059",
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py": "35bc57fcf2614062f5a8b8d0280010e4fa3cb44a8266482b273a24cff2e51269",
+    "tests/unit_tests/determinism/kernels/manifest.py": "7136606f90d7e0809187a847c7042be3479c4d9f5e7d0a5fef3ad9062cbf992d",
+    "ce_model_probe.py": "73894346acbeb2aad28c2f40fa12b00f269214e3569e58f92367831b9dcfc068"
+  }
+}
