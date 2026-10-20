@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -33,12 +34,15 @@ def load(paths):
     records, configs, metas = {}, {}, []
     for i, path in enumerate(paths):
         data = json.loads(Path(path).read_text())
+        if data.get('errors') or data.get('contaminated') or 'meta' not in data:
+            raise ValueError('Only closed, error-free, uncontaminated sweeps are candidates')
         metas.append(data["meta"])
         for kernel, keys in data["records"].items():
             for key, cases in keys.items():
                 slot = records.setdefault(kernel, {}).setdefault(key, {})
                 for case, timings in cases.items():
-                    slot[f"m{i}:{case}"] = {s: _median(q) for s, q in timings.items()}
+                    slot[f"m{i}:{case}"] = {s: _median(q) for s, q in timings.items()
+                                            if math.isfinite(_median(q)) and _median(q) > 0}
         for kernel, sigs in data["configs"].items():
             configs.setdefault(kernel, {}).update(sigs)
     return records, configs, metas
@@ -47,9 +51,11 @@ def load(paths):
 def worst_slowdown(cases: dict) -> dict:
     """sig -> max over cases of t/min(t); only sigs present in every case."""
     common = set.intersection(*(set(t) for t in cases.values()))
+    if not common:
+        raise ValueError('No valid candidate is shared by all cases')
     worst = {}
     for timings in cases.values():
-        best = min(timings[s] for s in common)
+        best = min(timings.values())
         for s in common:
             worst[s] = max(worst.get(s, 0.0), timings[s] / best)
     return worst
@@ -84,6 +90,9 @@ def main() -> int:
 
     records, configs, metas = load(args.sweeps)
     arches = {m["arch"] for m in metas}
+    versions = {(m['torch'], m['cuda'], m['triton'], m.get('mamba_ssm')) for m in metas}
+    if len(versions) != 1:
+        raise ValueError('Do not merge sweeps from different runtimes')
     if len(arches) != 1:
         print(f"ERROR: sweeps cover several architectures {sorted(arches)}", file=sys.stderr)
         return 2
@@ -115,14 +124,17 @@ def main() -> int:
                 report.append(_row(kernel, key, cases, best, kcfg))
         kernels[kernel] = entries
 
-    table = {"arch": arch, "kernels": kernels, "packages": {}, "source": args.source,
-             "triton": ""}
+    table = {"arch": arch, "kernels": kernels,
+             "packages": {"mamba_ssm": metas[0].get('mamba_ssm')}, "source": args.source,
+             "triton": metas[0]['triton']}
     Path(args.out).write_text(json.dumps(table, indent=2, sort_keys=True) + "\n")
-    lines = ["| kernel | key | cases | chosen / per-case best (worst) | cheapest / best (worst) |",
-             "|---|---|---|---|---|"]
+    lines = ["Private candidate only. These are selection estimates from the recording data, not held-out speedups or model step times.",
+             "Invalid/nonpositive candidates are excluded. Separate pinned replay and performance validation is required.", "",
+             "| kernel | key | cases | chosen / per-case best (worst) |",
+             "|---|---|---|---|"]
     for r in report:
         lines.append(f"| `{r['kernel'].split('.')[-1]}` | `{r['key'][:60]}` | {r['cases']} | "
-                     f"{r['chosen_worst']:.3f} | {r['cheapest_worst']:.3f} |")
+                     f"{r['chosen_worst']:.3f} |")
     meta_lines = [f"- {m['gpu']} ({m['arch']}), torch {m['torch']}, CUDA {m['cuda']}, "
                   f"triton {m['triton']}, mamba_ssm {m.get('mamba_ssm')}, {m['host_arch']}"
                   for m in metas]

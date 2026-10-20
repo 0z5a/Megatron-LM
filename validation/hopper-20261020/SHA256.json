@@ -1,5 +1,5 @@
 {
-  "README.md": "4167e990ef2a79c8b933a07a61ee13fa1cf906c4a6d7e7d168d58ca3b998cd6f",
+  "README.md": "18630dfbe8a77924a1afc9addbc437f4fb96f4b9916522ad41de463f2320da73",
   "results/ce-matrix-cold-v1-audit.json": "6284a6a1ed748725fffd0a9a3f7b0440b56409364bd75479b9c16f39d6355cc1",
   "results/collective-r1.rank0.json": "9054cbd7c1e8596b79ca2f87f72bcb4aac803a47c1fa82abc6e1815d0b4dbcdc",
   "results/collective-r1.rank1.json": "84d2ec855222d63f9a3804ca400da50bf03d340aa02b8618808223472789514b",
@@ -16,12 +16,14 @@
   "results/cross-host-v3-audit.json": "f047f419a0624cbfdbbb881e610cfbdcfa3a99438c58d1a11485debfcf5db169",
   "results/gh0-ce-cold-audit.json": "48d047f88f706337f1787d980e02352473edd030ae3c9278887a967286b5d369",
   "results/gh200-full-ordered-replay-audit.json": "5b1bafec07f76b942a9d68b625039fa7bb477172c55b9fb3c355b84e6cad209e",
+  "results/gh200-sweep.json": "cb0ace66d5ed5f8e368a9e5b6a519133a6bc5773bbc3d80a5db5927c26cdfa73",
   "results/model-step-validation-protocol.json": "c06e3bc731f7dd0e8a97a506643944bd5461073d5226f36af24131e71c4e130b",
+  "results/sm90-gh200-candidate.json": "e6e328449a54ec15d04f76b424e1378aee4fda43ec022101781749f4eacb94b8",
+  "scripts/build_candidate.py": "ae1056a0e040303ac49bc5105aab17ffe666803f475ae125d60654c7de59f81c",
   "scripts/ce_perf_probe.py": "c4d078a9e9f1482ea775abd0f1633c2d86d7f75bd583790f84f969070c333075",
   "scripts/ce_receipt_plugin.py": "0f6383b733b6835dcdaed89b2a9e9cf9ce3eead2b2c76c48b59978a1774ac9c0",
   "scripts/cross_host_collective_probe.py": "e08d49809f20751b3e6a8589c7c08d875251a3433b993c60b14b24c2f9d77020",
   "scripts/model_step_compare_v3.py": "1265130ece07fa62899a4e98764abf3fe42054bb4b5f77c25982cf679a5ee924",
-  "scripts/sm90_build_table.py": "88569d84ca84bcbc190e81d8373b84a1d5cfd3502af7502d734ee26c64ee88a4",
   "scripts/sm90_sweep.py": "35fac2cf30a128104f0cece4c5643e5172f77deecd9cd6eeb75628927b3132a7",
   "scripts/sm90_sweep_checkpoint.py": "9bebb56d285b9307616c4b002c67ffe2332da823700aea5723a4eecb774f155d",
   "scripts/sm90_validate_deterministic.py": "bc270c1eaaa4749018f2bf75f2f741ea8335a7f5c5f90dec659bf5cf599b2382"

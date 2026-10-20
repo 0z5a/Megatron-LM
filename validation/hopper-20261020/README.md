@@ -96,3 +96,5 @@ candidate directory only for the `table` mode.
 
 Model-step performance, the full aarch64 unit inventory, and the CE profile
 will be added after their finite queues finish and the evidence is audited.
+
+The table builder is `scripts/build_candidate.py`. It excludes invalid/nonpositive candidate timings, rejects mixed-runtime merges, and uses each case's fastest valid candidate as the slowdown denominator. `results/gh200-sweep.json` preserves the complete recorded candidate data; `results/sm90-gh200-candidate.json` is the exact independently replayed candidate. These recording-time estimates are not held-out performance results.
