@@ -150,3 +150,22 @@ actual GPT forward/backward/SGD steps each with native CE enabled through
 `apply_determinism_to_args`. Input, initial and final parameters, gradients and
 loss digests all matched. `native-ce-admission-audit.json` binds the exact
 changed-source hashes and 12 independently verified original files.
+
+## MLA follow-up diagnostics and candidate delivery
+
+[PR #8384](https://github.com/NVIDIA/Megatron-LM/pull/8384) keeps the candidate
+outside packaged defaults. It can be selected explicitly for investigation;
+its model qualification remains incomplete. Five additional table-mode MLA
+processes on the second GH200 matched their input/initial-parameter digests
+and all three optimizer-step results. This is a second-host diagnostic and
+does not invalidate the first host's original mismatch.
+
+Compute Sanitizer 2026.1.1 from the CUDA 13.2 toolkit reported zero errors for
+an isolated MLA memcheck and zero hazards for racecheck. The same four MLA
+forward/backward kernels and table choices were exercised without NCCL
+initialization. The earlier full-model sanitizer run recorded 90 handled
+NCCL architecture-probe API errors and exited 86; that negative window is
+preserved in the original archive and counted in `mla-diagnosis-audit.json`.
+A sanitizer result is not a cross-process numerical or performance proof.
+The two short public sanitizer logs replace the private work directory with
+`<WORK_DIR>`; result JSONs retain the exact selected configurations.

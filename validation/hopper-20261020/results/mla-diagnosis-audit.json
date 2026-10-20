@@ -1,0 +1,40 @@
+{
+  "mla-diagnose-gh0-20261020-v1": {
+    "verified_files": 19,
+    "case_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "foreign_gpu_processes": [
+      [],
+      [],
+      [],
+      [],
+      []
+    ]
+  },
+  "mla-sanitizer-gh0-20261020-v1": {
+    "verified_files": 7,
+    "case_exit_codes": [
+      86
+    ],
+    "foreign_gpu_processes": [
+      []
+    ]
+  },
+  "mla-isolated-sanitizer-gh0-20261020-v1": {
+    "verified_files": 8,
+    "case_exit_codes": [
+      0,
+      0
+    ],
+    "foreign_gpu_processes": [
+      [],
+      []
+    ]
+  },
+  "diagnosis": "Second-host five independent MLA processes stable. Original-host mismatch unresolved. Full-model sanitizer encountered 90 handled NCCL architecture probe API errors; isolated no-NCCL MLA memcheck/racecheck reports zero errors/hazards. Neither result clears the original model gate."
+}
