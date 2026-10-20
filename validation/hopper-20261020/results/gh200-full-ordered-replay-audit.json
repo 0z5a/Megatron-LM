@@ -1,0 +1,271 @@
+{
+  "verified_files": 8,
+  "shapes": 63,
+  "processes": 2,
+  "replays_each": 2,
+  "within_process": true,
+  "cross_process": true,
+  "same_choices": true,
+  "errors": [
+    [],
+    []
+  ],
+  "contamination": [
+    [],
+    []
+  ],
+  "cases": [
+    {
+      "case": "mla_q|h=1|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=1|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=1|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=1|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=1|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=1|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=2|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=2|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=2|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=2|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=2|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=2|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=4|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=4|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=4|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=4|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=4|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=4|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=8|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=8|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=8|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=8|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=8|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=8|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=16|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=16|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=16|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=16|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=16|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=16|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=32|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=32|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=32|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=32|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=32|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=32|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=64|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=64|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=64|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=64|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=64|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=64|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=128|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=128|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=128|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=128|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mla_q|h=128|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mla_kv|h=128|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mhc|C=2688|N=4|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mhc|C=2688|N=4|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mhc|C=2688|N=4|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mhc|C=4096|N=4|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mhc|C=4096|N=4|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mhc|C=4096|N=4|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "mhc|C=7168|N=4|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "mhc|C=7168|N=4|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "mhc|C=7168|N=4|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "ssd|z=1|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "ssd|z=1|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "ssd|z=1|tokens=32768",
+      "same": true
+    },
+    {
+      "case": "ssd|z=0|tokens=2048",
+      "same": true
+    },
+    {
+      "case": "ssd|z=0|tokens=8192",
+      "same": true
+    },
+    {
+      "case": "ssd|z=0|tokens=32768",
+      "same": true
+    }
+  ]
+}

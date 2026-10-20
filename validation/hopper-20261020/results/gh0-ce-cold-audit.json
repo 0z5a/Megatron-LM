@@ -1,0 +1,22 @@
+{
+  "files_verified": 11,
+  "cases": {
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-default-tp1]": {
+      "n": 3,
+      "identical": false
+    },
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-deterministic-tp1]": {
+      "n": 3,
+      "identical": true
+    },
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-default-tp1]": {
+      "n": 3,
+      "identical": false
+    },
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-deterministic-tp1]": {
+      "n": 3,
+      "identical": true
+    }
+  },
+  "scope": "GH200_0 TP1, 3 cold processes"
+}

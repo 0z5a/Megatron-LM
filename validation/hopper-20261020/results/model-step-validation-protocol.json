@@ -1,0 +1,24 @@
+{
+  "scope": "synthetic full-model forward/backward and SGD only",
+  "source": "67413f611ffb1e7d7d29cd2a61f520cffe79d995",
+  "families": [
+    "mla",
+    "mhc",
+    "ssd"
+  ],
+  "seq_length": 2048,
+  "vocab_size": 512,
+  "seed": 1234,
+  "warmup_steps": 4,
+  "measured_steps": 10,
+  "independent_processes_per_mode": 3,
+  "modes": [
+    "auto",
+    "table",
+    "cheapest"
+  ],
+  "order": "rotate mode order between rounds",
+  "timing_gate": "Report paired table/auto median and variability; require table/auto upper 95% CI <= 1.05 before claiming no material step-time regression. Preserve any miss or failed family.",
+  "correctness_gate": "All losses finite; within each fixed mode all loss, final parameter and gradient SHA256 digests agree across independent runs. Numerical equivalence across modes is a separate check.",
+  "interference": "Any foreign GPU process invalidates that case and stops only owned children; CPU native dependency builds must finish before timed trials."
+}

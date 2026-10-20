@@ -1,0 +1,33 @@
+{
+  "files_sha_pass": 10,
+  "archive_sha256": "9a009b6a916cb03edaa57c6cf1ebbb6b898f07cb47af7841cd44aa43a10d23f1",
+  "cases": {
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-default-tp1]": {
+      "n": 3,
+      "identical": false,
+      "contention": true,
+      "replays": 4
+    },
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-deterministic-tp1]": {
+      "n": 3,
+      "identical": true,
+      "contention": true,
+      "replays": 4
+    },
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-default-tp1]": {
+      "n": 3,
+      "identical": false,
+      "contention": true,
+      "replays": 4
+    },
+    "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-deterministic-tp1]": {
+      "n": 3,
+      "identical": true,
+      "contention": true,
+      "replays": 4
+    }
+  },
+  "records": 12,
+  "all_pass": false,
+  "scope": "GH200 TP1 only; TP2 skipped; xfail disabled for validation; production guard retained"
+}

@@ -1,0 +1,152 @@
+{
+  "files_verified": 56,
+  "ranks": {
+    "0": {
+      "collective_three_processes_identical": true,
+      "nccl_ep_pytest_pass": true,
+      "ib_gdrdma_logged": true,
+      "ce_passes_per_process": 8
+    },
+    "1": {
+      "collective_three_processes_identical": true,
+      "nccl_ep_pytest_pass": true,
+      "ib_gdrdma_logged": true,
+      "ce_passes_per_process": 8
+    }
+  },
+  "ce_matrix": {
+    "0": {
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-default-tp1]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-default-tp2]": {
+        "n": 3,
+        "identical": false,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 2,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-deterministic-tp1]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-deterministic-tp2]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 2,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-default-tp1]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-default-tp2]": {
+        "n": 3,
+        "identical": false,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 2,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-deterministic-tp1]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-deterministic-tp2]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 2,
+        "contention": true
+      }
+    },
+    "1": {
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-default-tp1]": {
+        "n": 3,
+        "identical": false,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-default-tp2]": {
+        "n": 3,
+        "identical": false,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 2,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-deterministic-tp1]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[bf16-deterministic-tp2]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 2,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-default-tp1]": {
+        "n": 3,
+        "identical": false,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-default-tp2]": {
+        "n": 3,
+        "identical": false,
+        "inputs_identical": true,
+        "strict": false,
+        "tp": 2,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-deterministic-tp1]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 1,
+        "contention": true
+      },
+      "tests/unit_tests/determinism/kernels/test_fused_activations.py::TestFusedCrossEntropy::test_fused_vocab_parallel_cross_entropy_replays[fp32-deterministic-tp2]": {
+        "n": 3,
+        "identical": true,
+        "inputs_identical": true,
+        "strict": true,
+        "tp": 2,
+        "contention": true
+      }
+    }
+  },
+  "scope": "fixed physical GH200 pair, NCCL-EP and TP2 CE; no different Slurm allocation claim"
+}

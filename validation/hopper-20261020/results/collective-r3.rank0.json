@@ -1,0 +1,86 @@
+{
+  "rank": 0,
+  "world_size": 2,
+  "hostname": "gh200-rank-0",
+  "scope": "same two physical hosts; independent process restarts, not Slurm allocations",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "nccl": [
+    2,
+    30,
+    7
+  ],
+  "device": "NVIDIA GH200 480GB",
+  "records": [
+    {
+      "dtype": "torch.bfloat16",
+      "replay": 0,
+      "loss": "0208e3a4ab74856951cbc1157301f0d419c96e76832032eae8dd3e8ff3e5b716",
+      "gradient": "cb1c0cbaf3417a5c8bd5a6ba867f72ae5f003ba64c25bdbbce353479781ffec0",
+      "shard": "6247e7f35c5fd65d556751546eb84a96c26d6ee25f4db40da65a2a1e8d0d4ef2"
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "replay": 1,
+      "loss": "0208e3a4ab74856951cbc1157301f0d419c96e76832032eae8dd3e8ff3e5b716",
+      "gradient": "cb1c0cbaf3417a5c8bd5a6ba867f72ae5f003ba64c25bdbbce353479781ffec0",
+      "shard": "6247e7f35c5fd65d556751546eb84a96c26d6ee25f4db40da65a2a1e8d0d4ef2"
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "replay": 2,
+      "loss": "0208e3a4ab74856951cbc1157301f0d419c96e76832032eae8dd3e8ff3e5b716",
+      "gradient": "cb1c0cbaf3417a5c8bd5a6ba867f72ae5f003ba64c25bdbbce353479781ffec0",
+      "shard": "6247e7f35c5fd65d556751546eb84a96c26d6ee25f4db40da65a2a1e8d0d4ef2"
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "replay": 3,
+      "loss": "0208e3a4ab74856951cbc1157301f0d419c96e76832032eae8dd3e8ff3e5b716",
+      "gradient": "cb1c0cbaf3417a5c8bd5a6ba867f72ae5f003ba64c25bdbbce353479781ffec0",
+      "shard": "6247e7f35c5fd65d556751546eb84a96c26d6ee25f4db40da65a2a1e8d0d4ef2"
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "replay": 4,
+      "loss": "0208e3a4ab74856951cbc1157301f0d419c96e76832032eae8dd3e8ff3e5b716",
+      "gradient": "cb1c0cbaf3417a5c8bd5a6ba867f72ae5f003ba64c25bdbbce353479781ffec0",
+      "shard": "6247e7f35c5fd65d556751546eb84a96c26d6ee25f4db40da65a2a1e8d0d4ef2"
+    },
+    {
+      "dtype": "torch.float32",
+      "replay": 0,
+      "loss": "28cc9d28b18038a86f87bade158b5065eae3522a0ae45e5b5d5e6d275d5cfd33",
+      "gradient": "09dc88770e41072c9a38af7274187121ea8a44725549ecb72b1081608a8d4363",
+      "shard": "87db01767e7f83886e1be9660dc2542170361c92e67f0a5a33ce297055947eb7"
+    },
+    {
+      "dtype": "torch.float32",
+      "replay": 1,
+      "loss": "28cc9d28b18038a86f87bade158b5065eae3522a0ae45e5b5d5e6d275d5cfd33",
+      "gradient": "09dc88770e41072c9a38af7274187121ea8a44725549ecb72b1081608a8d4363",
+      "shard": "87db01767e7f83886e1be9660dc2542170361c92e67f0a5a33ce297055947eb7"
+    },
+    {
+      "dtype": "torch.float32",
+      "replay": 2,
+      "loss": "28cc9d28b18038a86f87bade158b5065eae3522a0ae45e5b5d5e6d275d5cfd33",
+      "gradient": "09dc88770e41072c9a38af7274187121ea8a44725549ecb72b1081608a8d4363",
+      "shard": "87db01767e7f83886e1be9660dc2542170361c92e67f0a5a33ce297055947eb7"
+    },
+    {
+      "dtype": "torch.float32",
+      "replay": 3,
+      "loss": "28cc9d28b18038a86f87bade158b5065eae3522a0ae45e5b5d5e6d275d5cfd33",
+      "gradient": "09dc88770e41072c9a38af7274187121ea8a44725549ecb72b1081608a8d4363",
+      "shard": "87db01767e7f83886e1be9660dc2542170361c92e67f0a5a33ce297055947eb7"
+    },
+    {
+      "dtype": "torch.float32",
+      "replay": 4,
+      "loss": "28cc9d28b18038a86f87bade158b5065eae3522a0ae45e5b5d5e6d275d5cfd33",
+      "gradient": "09dc88770e41072c9a38af7274187121ea8a44725549ecb72b1081608a8d4363",
+      "shard": "87db01767e7f83886e1be9660dc2542170361c92e67f0a5a33ce297055947eb7"
+    }
+  ]
+}
