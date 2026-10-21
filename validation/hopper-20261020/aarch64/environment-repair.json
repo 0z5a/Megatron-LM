@@ -1,0 +1,102 @@
+{
+  "verified_files": 10,
+  "executed_files_or_targets": 2,
+  "counts": {
+    "passed": 11
+  },
+  "records": [
+    {
+      "case": "nccl_allocator",
+      "target": "tests/unit_tests/rl/test_rl_utils.py::TestRLUtils::test_grad_buffer_offload[nccl-ub-shared-pool-rejected]",
+      "driver_exit_code": 0,
+      "collected": 5,
+      "attempted": 5,
+      "counts": {
+        "passed": 5
+      },
+      "collection_errors": [],
+      "journal_finish": true
+    },
+    {
+      "case": "datasets_lts",
+      "target": "tests/unit_tests/data/test_varlen_dataset.py::test_low_level_rejects_unknown_schema",
+      "driver_exit_code": 0,
+      "collected": 6,
+      "attempted": 6,
+      "counts": {
+        "passed": 6
+      },
+      "collection_errors": [],
+      "journal_finish": true
+    }
+  ],
+  "ledger": [
+    {
+      "nodeid": "tests/unit_tests/rl/test_rl_utils.py::TestRLUtils::test_grad_buffer_offload[nccl-ub-gradient-registration-cleanup-failure]",
+      "case": "nccl_allocator",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/rl/test_rl_utils.py::TestRLUtils::test_grad_buffer_offload[nccl-ub-gradient-registration-failure]",
+      "case": "nccl_allocator",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/rl/test_rl_utils.py::TestRLUtils::test_grad_buffer_offload[nccl-ub-offload-layout]",
+      "case": "nccl_allocator",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/rl/test_rl_utils.py::TestRLUtils::test_grad_buffer_offload[nccl-ub-parameter-registration-failure]",
+      "case": "nccl_allocator",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/rl/test_rl_utils.py::TestRLUtils::test_grad_buffer_offload[nccl-ub-shared-pool-rejected]",
+      "case": "nccl_allocator",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/data/test_varlen_dataset.py::test_low_level_jsonl_heterogeneous_columns",
+      "case": "datasets_lts",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/data/test_varlen_dataset.py::test_low_level_loads_jsonl_alpaca",
+      "case": "datasets_lts",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/data/test_varlen_dataset.py::test_low_level_loads_jsonl_messages",
+      "case": "datasets_lts",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/data/test_varlen_dataset.py::test_low_level_loads_jsonl_pretrain_text",
+      "case": "datasets_lts",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/data/test_varlen_dataset.py::test_low_level_loads_jsonl_sharegpt",
+      "case": "datasets_lts",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "nodeid": "tests/unit_tests/data/test_varlen_dataset.py::test_low_level_rejects_unknown_schema",
+      "case": "datasets_lts",
+      "status": "passed",
+      "detail": ""
+    }
+  ],
+  "scope": "Targeted world=1 rerun of eleven previous failures after building the NCCL allocator with explicit header/linker paths and using the repository LTS datasets 4.8.5 pin in an isolated overlay. Original failures remain in the prior ledgers."
+}

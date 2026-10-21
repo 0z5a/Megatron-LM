@@ -196,3 +196,33 @@ failures or expand this original inventory's pass count.
 The [two-H100 adapter record](hybridep/README.md) contains all 336 rank records,
 including SGD updates, from Draft #8388. All BF16 numerical gates passed.
 Fixed-order timings remain descriptive.
+
+## Original-host MLA diagnosis
+
+Nine additional independent processes on the original GH200 host ran the same
+model with explicit initial parameter and input hashes: six table and three
+cheapest runs, three SGD steps each. All initial parameters and tokens matched.
+Five table runs and all three cheapest controls agreed; one table run differed
+in its first loss, subsequent losses, three final parameter tensors and twelve
+final gradient tensors despite identical table-choice hashes. The
+[raw diagnosis and independent audit](mla-original-diagnosis) preserve this
+repeated failure. The candidate remains opt-in and unqualified. A zero-error
+isolated sanitizer run on the other host does not clear this numerical failure.
+
+The separate dependency follow-up selected 334 node IDs: 302 passed, 14 failed
+and 18 skipped. Nine of the original twelve collection-error modules collected
+after isolated dependency installation and importlib collection; three still
+fail on the FlashAttention CuTe / CUTLASS DSL `ThrMma` API mismatch. Original
+failures are retained in [the follow-up ledger](aarch64/dependency-followup.json).
+
+A final three-process MLA table check repeated the original four warmup plus
+ten measured SGD steps, with explicit initial parameter/input hashes. Those
+three processes matched all hashes. The [exact-protocol results](mla-exact-protocol)
+do not erase either earlier mismatch series or the failed performance gate.
+
+A final targeted environment repair passed all eleven previously failing cases:
+five NCCL allocator/offload checks after supplying the NCCL header/linker paths,
+and six JSONL dataset checks with the repository LTS `datasets==4.8.5` pin.
+The [repair ledger](aarch64/environment-repair.json) remains separate from the
+earlier counts. Three topology-limited failures and three CuTe/CUTLASS collection
+errors remain in the dependency-follow-up subset; this is not a clean full suite.

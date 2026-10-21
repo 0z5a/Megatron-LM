@@ -1,0 +1,190 @@
+{
+  "verified_files": 31,
+  "runs": 9,
+  "summary": {
+    "table": {
+      "runs": 6,
+      "variant_counts": {
+        "initial_parameters": 1,
+        "input_tokens": 1,
+        "loss_sequence": 2,
+        "final_parameters": 2,
+        "final_gradients": 2,
+        "choices": 1
+      },
+      "variants": {
+        "initial_parameters": {
+          "2eaa38754c1109b7aa4f6bcd37cb09c655f3a9dc366b13ac611dabcfa437bd9c": [
+            "mla-table-r4.json",
+            "mla-table-r8.json",
+            "mla-table-r5.json",
+            "mla-table-r2.json",
+            "mla-table-r1.json",
+            "mla-table-r7.json"
+          ]
+        },
+        "input_tokens": {
+          "d06b68badd085eb1118add577f3c17c15ce773a8424f3117676fd6fac369db20": [
+            "mla-table-r4.json",
+            "mla-table-r8.json",
+            "mla-table-r5.json",
+            "mla-table-r2.json",
+            "mla-table-r1.json",
+            "mla-table-r7.json"
+          ]
+        },
+        "loss_sequence": {
+          "412dcfd1788db5c68158baebd9f69ee14eb0d816b43f2e10db30b1b297862e2e": [
+            "mla-table-r4.json",
+            "mla-table-r8.json",
+            "mla-table-r5.json",
+            "mla-table-r1.json",
+            "mla-table-r7.json"
+          ],
+          "47a39fedff4113277460ac1edadb01c437e2702d5a93d958fd0b436c0428b637": [
+            "mla-table-r2.json"
+          ]
+        },
+        "final_parameters": {
+          "233111ae9be57c8c122527f1eb13c0919b0df215ebbcf49be9d9e20f3bb6d21b": [
+            "mla-table-r4.json",
+            "mla-table-r8.json",
+            "mla-table-r5.json",
+            "mla-table-r1.json",
+            "mla-table-r7.json"
+          ],
+          "e51ef2aee8935e737791ca7e488fbe7cfdf540e5abe49407f20576eb647b5c97": [
+            "mla-table-r2.json"
+          ]
+        },
+        "final_gradients": {
+          "7b4ca99be308c4e110f0b13132ef52806df08ebc87660dbd0eea07b9fb918c33": [
+            "mla-table-r4.json",
+            "mla-table-r8.json",
+            "mla-table-r5.json",
+            "mla-table-r1.json",
+            "mla-table-r7.json"
+          ],
+          "93601a548efd423fe944f6cb4376ce9fd935927465bb1708cf125760866cfbf7": [
+            "mla-table-r2.json"
+          ]
+        },
+        "choices": {
+          "4e6123812adc05d439e02f852b71ff6cdbf0857ecb877b830ba940b66926d898": [
+            "mla-table-r4.json",
+            "mla-table-r8.json",
+            "mla-table-r5.json",
+            "mla-table-r2.json",
+            "mla-table-r1.json",
+            "mla-table-r7.json"
+          ]
+        }
+      },
+      "loss_values": {
+        "mla-table-r4.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ],
+        "mla-table-r8.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ],
+        "mla-table-r5.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ],
+        "mla-table-r2.json": [
+          6.3489603996276855,
+          6.348954200744629,
+          6.348964214324951
+        ],
+        "mla-table-r1.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ],
+        "mla-table-r7.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ]
+      }
+    },
+    "cheapest": {
+      "runs": 3,
+      "variant_counts": {
+        "initial_parameters": 1,
+        "input_tokens": 1,
+        "loss_sequence": 1,
+        "final_parameters": 1,
+        "final_gradients": 1,
+        "choices": 1
+      },
+      "variants": {
+        "initial_parameters": {
+          "2eaa38754c1109b7aa4f6bcd37cb09c655f3a9dc366b13ac611dabcfa437bd9c": [
+            "mla-cheapest-r6.json",
+            "mla-cheapest-r9.json",
+            "mla-cheapest-r3.json"
+          ]
+        },
+        "input_tokens": {
+          "d06b68badd085eb1118add577f3c17c15ce773a8424f3117676fd6fac369db20": [
+            "mla-cheapest-r6.json",
+            "mla-cheapest-r9.json",
+            "mla-cheapest-r3.json"
+          ]
+        },
+        "loss_sequence": {
+          "412dcfd1788db5c68158baebd9f69ee14eb0d816b43f2e10db30b1b297862e2e": [
+            "mla-cheapest-r6.json",
+            "mla-cheapest-r9.json",
+            "mla-cheapest-r3.json"
+          ]
+        },
+        "final_parameters": {
+          "233111ae9be57c8c122527f1eb13c0919b0df215ebbcf49be9d9e20f3bb6d21b": [
+            "mla-cheapest-r6.json",
+            "mla-cheapest-r9.json",
+            "mla-cheapest-r3.json"
+          ]
+        },
+        "final_gradients": {
+          "7b4ca99be308c4e110f0b13132ef52806df08ebc87660dbd0eea07b9fb918c33": [
+            "mla-cheapest-r6.json",
+            "mla-cheapest-r9.json",
+            "mla-cheapest-r3.json"
+          ]
+        },
+        "choices": {
+          "94872744520155a88f545697469eb3a1a76e564a55c9b3732cf2d2f405f78121": [
+            "mla-cheapest-r6.json",
+            "mla-cheapest-r9.json",
+            "mla-cheapest-r3.json"
+          ]
+        }
+      },
+      "loss_values": {
+        "mla-cheapest-r6.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ],
+        "mla-cheapest-r9.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ],
+        "mla-cheapest-r3.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477
+        ]
+      }
+    }
+  },
+  "scope": "Independent process diagnosis with explicit initial parameter/input hashes; does not replace the original failed qualification or performance gates."
+}

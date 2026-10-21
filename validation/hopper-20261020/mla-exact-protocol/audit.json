@@ -1,0 +1,112 @@
+{
+  "verified_files": 13,
+  "runs": 3,
+  "summary": {
+    "table": {
+      "runs": 3,
+      "variant_counts": {
+        "initial_parameters": 1,
+        "input_tokens": 1,
+        "loss_sequence": 1,
+        "final_parameters": 1,
+        "final_gradients": 1,
+        "choices": 1
+      },
+      "variants": {
+        "initial_parameters": {
+          "2eaa38754c1109b7aa4f6bcd37cb09c655f3a9dc366b13ac611dabcfa437bd9c": [
+            "mla-table-exact-r1.json",
+            "mla-table-exact-r2.json",
+            "mla-table-exact-r3.json"
+          ]
+        },
+        "input_tokens": {
+          "d06b68badd085eb1118add577f3c17c15ce773a8424f3117676fd6fac369db20": [
+            "mla-table-exact-r1.json",
+            "mla-table-exact-r2.json",
+            "mla-table-exact-r3.json"
+          ]
+        },
+        "loss_sequence": {
+          "439c856aadf0795e23f5d4af140a1669f377a017566d8df06f01f55a870e8829": [
+            "mla-table-exact-r1.json",
+            "mla-table-exact-r2.json",
+            "mla-table-exact-r3.json"
+          ]
+        },
+        "final_parameters": {
+          "15004866a80ee625d6a2d8e1f5716b761f013bd4aa95dd9db81f74332133e738": [
+            "mla-table-exact-r1.json",
+            "mla-table-exact-r2.json",
+            "mla-table-exact-r3.json"
+          ]
+        },
+        "final_gradients": {
+          "dfa9da7c42698cdd634e68d4dcb508963670af1e3605d4e6df1792203a85a148": [
+            "mla-table-exact-r1.json",
+            "mla-table-exact-r2.json",
+            "mla-table-exact-r3.json"
+          ]
+        },
+        "choices": {
+          "4e6123812adc05d439e02f852b71ff6cdbf0857ecb877b830ba940b66926d898": [
+            "mla-table-exact-r1.json",
+            "mla-table-exact-r2.json",
+            "mla-table-exact-r3.json"
+          ]
+        }
+      },
+      "loss_values": {
+        "mla-table-exact-r1.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477,
+          6.34896183013916,
+          6.348921298980713,
+          6.348926544189453,
+          6.348921298980713,
+          6.348899841308594,
+          6.348930358886719,
+          6.348963737487793,
+          6.348952293395996,
+          6.348847389221191,
+          6.348910808563232,
+          6.348916530609131
+        ],
+        "mla-table-exact-r2.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477,
+          6.34896183013916,
+          6.348921298980713,
+          6.348926544189453,
+          6.348921298980713,
+          6.348899841308594,
+          6.348930358886719,
+          6.348963737487793,
+          6.348952293395996,
+          6.348847389221191,
+          6.348910808563232,
+          6.348916530609131
+        ],
+        "mla-table-exact-r3.json": [
+          6.348957538604736,
+          6.348947048187256,
+          6.348962783813477,
+          6.34896183013916,
+          6.348921298980713,
+          6.348926544189453,
+          6.348921298980713,
+          6.348899841308594,
+          6.348930358886719,
+          6.348963737487793,
+          6.348952293395996,
+          6.348847389221191,
+          6.348910808563232,
+          6.348916530609131
+        ]
+      }
+    }
+  },
+  "scope": "Independent process diagnosis with explicit initial parameter/input hashes; does not replace the original failed qualification or performance gates."
+}

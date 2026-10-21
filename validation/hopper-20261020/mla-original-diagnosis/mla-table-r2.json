@@ -1,0 +1,113 @@
+{
+  "family": "mla",
+  "mode": "table",
+  "steps": [
+    {
+      "step": 0,
+      "warmup": false,
+      "milliseconds": 1160.7801513671875,
+      "loss": 6.3489603996276855,
+      "loss_digest": "9e99dd2a0985f8d028f89d9eddb7220a8114bef65a74b11d9920f4192916ea72"
+    },
+    {
+      "step": 1,
+      "warmup": false,
+      "milliseconds": 37.675777435302734,
+      "loss": 6.348954200744629,
+      "loss_digest": "3d98f7bba2b4769a8c92ad6baa1b53c3ea7257ed65b9728237010f8549e2976c"
+    },
+    {
+      "step": 2,
+      "warmup": false,
+      "milliseconds": 27.973983764648438,
+      "loss": 6.348964214324951,
+      "loss_digest": "127b7255256ba3324f46f0e0178f1c87a261a8477ce82fe84cf7df15279ee1cb"
+    }
+  ],
+  "initial": {
+    "tokens": "1435f020d7cb5caf7108281a4246c1fc4cfed7d6d72b4e6ca60d4764f6454d87",
+    "parameters": {
+      "embedding.word_embeddings.weight": "baa82f56dd6181eab5e0a887697c1912ce8872200e42304d2d0534d5a692ed3a",
+      "decoder.layers.0.input_layernorm.weight": "ad755ff209a358c0a9891662926947d163a48a087efa7da7b8ce9348cfe8c2d1",
+      "decoder.layers.0.self_attention.linear_proj.weight": "5223aafb25fd40d46772c1f6dc0605d86a2331832710216a4f20821378631965",
+      "decoder.layers.0.self_attention.linear_q_down_proj.weight": "2742297cab9a778139d321a3994b8e82a190a03ce99aaabdcfeb12b34d7943f9",
+      "decoder.layers.0.self_attention.linear_q_up_proj.weight": "6e373f3b31013154ac2fa73af034dc55dc6e19e0e8011d7c69b07af7b4f503f0",
+      "decoder.layers.0.self_attention.linear_kv_down_proj.weight": "6bbbb3e9a132b0687febd3876b87dc89a81c5b289ae5d1c3b00434f7e6c4fc2b",
+      "decoder.layers.0.self_attention.linear_kv_up_proj.weight": "ff72cf74007d4e8834761b6d5fc341dfb95c47798b1649e86fc0d6af5363a87c",
+      "decoder.layers.0.mlp.linear_fc1.layer_norm_weight": "ad755ff209a358c0a9891662926947d163a48a087efa7da7b8ce9348cfe8c2d1",
+      "decoder.layers.0.mlp.linear_fc1.weight": "08753cf2cd312efa0e1ec090b045419055e695b34a2487b39d8934a73e2d99a8",
+      "decoder.layers.0.mlp.linear_fc2.weight": "b23a220fda7e4c95bedb61b74d9aecc6691b6986c480c2ef366cf9f29089683d",
+      "decoder.final_layernorm.weight": "ad755ff209a358c0a9891662926947d163a48a087efa7da7b8ce9348cfe8c2d1",
+      "output_layer.weight": "308902589f0f90733adb616ccc2ae1a51af00c9a9c6a9708e752d92a38878790"
+    }
+  },
+  "median_ms": 37.675777435302734,
+  "parameter_digests": {
+    "embedding.word_embeddings.weight": "2e86b3dc269a9e7ee773071f807c19e38f42a709ae7f52eb78a6d7119c6a79d3",
+    "decoder.layers.0.input_layernorm.weight": "ad755ff209a358c0a9891662926947d163a48a087efa7da7b8ce9348cfe8c2d1",
+    "decoder.layers.0.self_attention.linear_proj.weight": "7f8eca6601c967b279f8b14f58b89d5e41907d8478fa952e4d590d66f3fa4409",
+    "decoder.layers.0.self_attention.linear_q_down_proj.weight": "6b93a3e60a1b92ddd291ddb7809fffb308e9da234019d89bb5ee013756a2b04b",
+    "decoder.layers.0.self_attention.linear_q_up_proj.weight": "ee9410732a95ed530d3c1073e59a337a07b28d08835f65296ff1f8fb8e499d9c",
+    "decoder.layers.0.self_attention.linear_kv_down_proj.weight": "a5fd97e39610a0ac81e41b024f464cd5b5c06c86982419b13eb4130844375f01",
+    "decoder.layers.0.self_attention.linear_kv_up_proj.weight": "811c1a671cd17421e7573dd5d7d529cbc6c140835b321fedae118b72840e0b56",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_weight": "ad755ff209a358c0a9891662926947d163a48a087efa7da7b8ce9348cfe8c2d1",
+    "decoder.layers.0.mlp.linear_fc1.weight": "e0bd55c598bc096a171f02adff998b984b36f8061f52ffd7dd07046f7e9409c0",
+    "decoder.layers.0.mlp.linear_fc2.weight": "e4e10f930d9f4943ffd8398d14eff2102c2e76ae949cf1bc8f6aa8fabcf051a9",
+    "decoder.final_layernorm.weight": "ad755ff209a358c0a9891662926947d163a48a087efa7da7b8ce9348cfe8c2d1",
+    "output_layer.weight": "98cefad2c961a1dcdbfa24ce58d021b83a9f07adb9c70de4d050a6c43a3eb863"
+  },
+  "gradient_digests": {
+    "embedding.word_embeddings.weight": "ed7ef8ea1d481de95fa5b9c76ed93b342cd7c67171341fdea22d7d5cc6a2d317",
+    "decoder.layers.0.input_layernorm.weight": "088a287a0357af277c37fbed3398f46aa88f22f1b90e4602868e6631fe743879",
+    "decoder.layers.0.self_attention.linear_proj.weight": "f35c21af2444ebd38cbb607f248e2521379a5ea8a1aa2506bf3b37d5c54cf614",
+    "decoder.layers.0.self_attention.linear_q_down_proj.weight": "4c540d5a45b097d06087dd7d017244a4f16ce939ca21a212595a7c0672565d4f",
+    "decoder.layers.0.self_attention.linear_q_up_proj.weight": "810d1819528a748dc6b3f6372bde3229922e9980fa0a1e435a230b849c49b413",
+    "decoder.layers.0.self_attention.linear_kv_down_proj.weight": "fde9b7eea726b709241e8ee314c334a259f08f6d22872d0bcb87f9e3002e7b9f",
+    "decoder.layers.0.self_attention.linear_kv_up_proj.weight": "0e7b19a32560e12aa7592020c38ce226bf4f7c11ea8d5470489893604e945562",
+    "decoder.layers.0.mlp.linear_fc1.layer_norm_weight": "9fb538623b6e1a429b82445914a98a3a2f86b0dae9b4ed4dae6ecd7c6e6f5ca5",
+    "decoder.layers.0.mlp.linear_fc1.weight": "72e00d35b7932ee16a96de5a549a3d95f63f8276123a18fa6a3e0beebd9b2508",
+    "decoder.layers.0.mlp.linear_fc2.weight": "4010a00891ac1f3ff0e7c28f13ba25761d8f7e636514cd8d3edca0571071c5cc",
+    "decoder.final_layernorm.weight": "9ffeeed4a8fac6cb9cc70c7fee7926a3caafb1765ffce15fc0f312fc53a34dcc",
+    "output_layer.weight": "df1837d4c7775712bf39587345c46e7376fc3e56dafce8ddd430fb8b70a63771"
+  },
+  "choices": {
+    "sm90|megatron.core.fusions.fused_mla_yarn_rope_apply._mla_rope_fwd_inplace_kernel|emb_dim=64|head_num=8|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_H\": 128}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|megatron.core.fusions.fused_mla_yarn_rope_apply._mla_rope_fwd_kv_split_kernel|emb_dim=64|k_dim=128|v_dim=128|head_num=8|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_H\": 8}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|megatron.core.fusions.fused_mla_yarn_rope_apply._mla_rope_bwd_kv_split_kernel|emb_dim=64|k_dim=128|v_dim=128|head_num=8|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_H\": 8}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned",
+    "sm90|megatron.core.fusions.fused_mla_yarn_rope_apply._mla_rope_bwd_inplace_kernel|emb_dim=64|head_num=8|torch.bfloat16|torch.bfloat16|torch.bfloat16": "{\"ir_override\": null, \"kwargs\": {\"BLOCK_H\": 32}, \"maxnreg\": null, \"num_ctas\": 1, \"num_stages\": 3, \"num_warps\": 4};pinned"
+  },
+  "choice_digest": "8fd64d989f2ffa298c537e0613a9e311",
+  "meta": {
+    "torch": "2.14.1+cu130",
+    "triton": "3.8.0",
+    "cuda": "13.0",
+    "device": "NVIDIA GH200 480GB",
+    "seq": 2048,
+    "vocab": 512,
+    "seed": 1234,
+    "family_config": {
+      "num_layers": "1",
+      "hidden_size": "512",
+      "num_attention_heads": "8",
+      "use_cpu_initialization": "True",
+      "bf16": "True",
+      "params_dtype": "torch.bfloat16",
+      "pipeline_dtype": "torch.bfloat16",
+      "hidden_dropout": "0.0",
+      "attention_dropout": "0.0",
+      "deterministic_mode": "True",
+      "gradient_accumulation_fusion": "False",
+      "normalization": "RMSNorm",
+      "add_bias_linear": "False",
+      "multi_latent_attention": "True",
+      "q_lora_rank": "512",
+      "kv_lora_rank": "128",
+      "qk_head_dim": "128",
+      "qk_pos_emb_head_dim": "64",
+      "v_head_dim": "128",
+      "apply_rope_fusion": "True"
+    },
+    "table_sha256": "e6e328449a54ec15d04f76b424e1378aee4fda43ec022101781749f4eacb94b8",
+    "scope": "synthetic full-model forward/backward/SGD; no convergence claim"
+  }
+}

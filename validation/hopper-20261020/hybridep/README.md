@@ -14,7 +14,7 @@ without its optional multinode path.
 All **336 rank records passed**: seven workloads x six steps x two backends x
 two ranks x two modes. Both backends used identical inputs, logical routes and
 initial parameters. Outputs, input/probability/parameter gradients and SGD-updated
-parameters met relative L2 <= 0.01 and peak-normalized error <= 0.05; all-zero
+parameters (local SGD updates without a DDP wrapper) met relative L2 <= 0.01 and peak-normalized error <= 0.05; all-zero
 references required exact equality. This is BF16 numerical parity, not bit-exact
 qualification or full-model convergence. The source tokens and K were fixed.
 
