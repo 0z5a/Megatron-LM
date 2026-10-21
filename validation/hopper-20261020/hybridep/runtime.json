@@ -1,0 +1,1 @@
+{"torch": "2.14.0a0+b2c75dd062.nv26.09", "cuda": "13.4", "triton": "3.8.0", "transformer_engine": "2.19.0+5e52befd", "deep_ep": "1.2.1", "nccl": [2, 31, 2], "source": "fc15dc5b24345204d32e7e648ae18479dbda69a9", "hybridep_source": "10d4dd7377d5bce900fbb4b80cce863764892b95"}

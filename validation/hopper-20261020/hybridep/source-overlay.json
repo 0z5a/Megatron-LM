@@ -1,0 +1,8 @@
+{
+  "base_commit": "fc15dc5b24345204d32e7e648ae18479dbda69a9",
+  "final_commit": "9d5504449bb806689d4c1c9d53b3a43e31279f0d",
+  "files": {
+    "benchmarks/moe/token_imbalance/hybridep_adapter.py": "0166ba697d65ec84e44292f8d6cc776acdebae8f6a3eab39afeaeefbd61b212e",
+    "benchmarks/moe/token_imbalance/compare_hybridep.py": "7333e0089c819b3439855c55f4791f7849fb358fa5b046ee3a7dc7835072dd2b"
+  }
+}

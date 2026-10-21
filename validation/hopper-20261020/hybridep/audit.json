@@ -1,0 +1,431 @@
+{
+  "archive_sha256": "ea5632724896b07059d025baa26e170e1c8f6319a0291b8934be569b5bcb993f",
+  "verified_files": 50,
+  "expected_rank_records": 336,
+  "observed_rank_records": 336,
+  "numerical_gate_pass": true,
+  "failed_records": [],
+  "summaries": [
+    {
+      "mode": "training_step",
+      "workload": "W0_balanced",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 8.850848197937012,
+      "rank_time_max_over_mean_mean": 1.1470151250986762,
+      "logical_rank_max_over_mean_per_step": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W0_balanced",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 9.170053323109945,
+      "rank_time_max_over_mean_mean": 1.165379097973926,
+      "logical_rank_max_over_mean_per_step": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W1_hot_expert_set",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 10.380037307739258,
+      "rank_time_max_over_mean_mean": 1.331401139836626,
+      "logical_rank_max_over_mean_per_step": [
+        1.7578125,
+        1.765625,
+        1.75,
+        1.76953125,
+        1.724609375,
+        1.748046875
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W1_hot_expert_set",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 10.628415743509928,
+      "rank_time_max_over_mean_mean": 1.2396461771776601,
+      "logical_rank_max_over_mean_per_step": [
+        1.7578125,
+        1.765625,
+        1.75,
+        1.76953125,
+        1.724609375,
+        1.748046875
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W3_spread_hot_experts",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 10.463530699412027,
+      "rank_time_max_over_mean_mean": 1.3475581054703092,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.02734375,
+        1.013671875,
+        1.01171875,
+        1.005859375,
+        1.015625
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W3_spread_hot_experts",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 10.81551456451416,
+      "rank_time_max_over_mean_mean": 1.2337503283457203,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.02734375,
+        1.013671875,
+        1.01171875,
+        1.005859375,
+        1.015625
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W4_random_balanced",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 6.170981248219808,
+      "rank_time_max_over_mean_mean": 1.0219565354798035,
+      "logical_rank_max_over_mean_per_step": [
+        1.029296875,
+        1.021484375,
+        1.037109375,
+        1.03515625,
+        1.005859375,
+        1.001953125
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W4_random_balanced",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 13.002016067504883,
+      "rank_time_max_over_mean_mean": 1.1447225370184693,
+      "logical_rank_max_over_mean_per_step": [
+        1.029296875,
+        1.021484375,
+        1.037109375,
+        1.03515625,
+        1.005859375,
+        1.001953125
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W5_zero_expert_rank",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 9.647733370463053,
+      "rank_time_max_over_mean_mean": 1.1823778752044314,
+      "logical_rank_max_over_mean_per_step": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W5_zero_expert_rank",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 12.92845344543457,
+      "rank_time_max_over_mean_mean": 1.1404249702762799,
+      "logical_rank_max_over_mean_per_step": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W6_rotating_hotspot",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 10.000223795572916,
+      "rank_time_max_over_mean_mean": 1.2011126272599433,
+      "logical_rank_max_over_mean_per_step": [
+        1.748046875,
+        1.755859375,
+        1.73046875,
+        1.759765625,
+        1.763671875,
+        1.740234375
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W6_rotating_hotspot",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 13.108485539754232,
+      "rank_time_max_over_mean_mean": 1.1474093432996146,
+      "logical_rank_max_over_mean_per_step": [
+        1.748046875,
+        1.755859375,
+        1.73046875,
+        1.759765625,
+        1.763671875,
+        1.740234375
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W7_burst",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 9.99126942952474,
+      "rank_time_max_over_mean_mean": 1.202423065992343,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.009765625,
+        1.009765625,
+        1.494140625,
+        1.0078125,
+        1.02734375
+      ]
+    },
+    {
+      "mode": "training_step",
+      "workload": "W7_burst",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 8.961829344431559,
+      "rank_time_max_over_mean_mean": 1.0086020147560857,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.009765625,
+        1.009765625,
+        1.494140625,
+        1.0078125,
+        1.02734375
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W0_balanced",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 6.859445254007976,
+      "rank_time_max_over_mean_mean": 1.024041640955789,
+      "logical_rank_max_over_mean_per_step": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W0_balanced",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 9.760517438252768,
+      "rank_time_max_over_mean_mean": 1.034911657561096,
+      "logical_rank_max_over_mean_per_step": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W1_hot_expert_set",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 5.881519953409831,
+      "rank_time_max_over_mean_mean": 1.0099648840384998,
+      "logical_rank_max_over_mean_per_step": [
+        1.7578125,
+        1.765625,
+        1.75,
+        1.76953125,
+        1.724609375,
+        1.748046875
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W1_hot_expert_set",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 8.766682783762613,
+      "rank_time_max_over_mean_mean": 1.00524182004742,
+      "logical_rank_max_over_mean_per_step": [
+        1.7578125,
+        1.765625,
+        1.75,
+        1.76953125,
+        1.724609375,
+        1.748046875
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W3_spread_hot_experts",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 6.0266720453898115,
+      "rank_time_max_over_mean_mean": 1.0123588863221369,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.02734375,
+        1.013671875,
+        1.01171875,
+        1.005859375,
+        1.015625
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W3_spread_hot_experts",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 8.77780262629191,
+      "rank_time_max_over_mean_mean": 1.0038450572442994,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.02734375,
+        1.013671875,
+        1.01171875,
+        1.005859375,
+        1.015625
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W4_random_balanced",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 5.904191970825195,
+      "rank_time_max_over_mean_mean": 1.0084540520613492,
+      "logical_rank_max_over_mean_per_step": [
+        1.029296875,
+        1.021484375,
+        1.037109375,
+        1.03515625,
+        1.005859375,
+        1.001953125
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W4_random_balanced",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 8.854458649953207,
+      "rank_time_max_over_mean_mean": 1.006813840217561,
+      "logical_rank_max_over_mean_per_step": [
+        1.029296875,
+        1.021484375,
+        1.037109375,
+        1.03515625,
+        1.005859375,
+        1.001953125
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W5_zero_expert_rank",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 5.852730671564738,
+      "rank_time_max_over_mean_mean": 1.0265760443582188,
+      "logical_rank_max_over_mean_per_step": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W5_zero_expert_rank",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 8.826821327209473,
+      "rank_time_max_over_mean_mean": 1.0086764776830768,
+      "logical_rank_max_over_mean_per_step": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W6_rotating_hotspot",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 5.903802712758382,
+      "rank_time_max_over_mean_mean": 1.0104789207555942,
+      "logical_rank_max_over_mean_per_step": [
+        1.748046875,
+        1.755859375,
+        1.73046875,
+        1.759765625,
+        1.763671875,
+        1.740234375
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W6_rotating_hotspot",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 8.846576054890951,
+      "rank_time_max_over_mean_mean": 1.1565319938666574,
+      "logical_rank_max_over_mean_per_step": [
+        1.748046875,
+        1.755859375,
+        1.73046875,
+        1.759765625,
+        1.763671875,
+        1.740234375
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W7_burst",
+      "backend": "hybridep",
+      "worst_rank_ms_mean": 5.8352586428324384,
+      "rank_time_max_over_mean_mean": 1.1052675056204608,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.009765625,
+        1.009765625,
+        1.494140625,
+        1.0078125,
+        1.02734375
+      ]
+    },
+    {
+      "mode": "moe_fwd_bwd",
+      "workload": "W7_burst",
+      "backend": "hybridep_virtual_experts",
+      "worst_rank_ms_mean": 9.63915729522705,
+      "rank_time_max_over_mean_mean": 1.0770105654586588,
+      "logical_rank_max_over_mean_per_step": [
+        1.013671875,
+        1.009765625,
+        1.009765625,
+        1.494140625,
+        1.0078125,
+        1.02734375
+      ]
+    }
+  ],
+  "scope": "BF16 finite MoELayer, EP2 TP1 ETP1, seven W workloads x six steps x two backends x two ranks x two modes. Fixed order timings are descriptive, not speedup qualification."
+}

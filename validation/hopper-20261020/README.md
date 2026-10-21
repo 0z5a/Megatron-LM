@@ -169,3 +169,30 @@ preserved in the original archive and counted in `mla-diagnosis-audit.json`.
 A sanitizer result is not a cross-process numerical or performance proof.
 The two short public sanitizer logs replace the private work directory with
 `<WORK_DIR>`; result JSONs retain the exact selected configurations.
+
+## Native aarch64 unit inventory
+
+The completed world-size-one inventory selected 14,324 non-internal node IDs
+from the modules that collected successfully. It attempted 14,212 unique IDs:
+10,163 passed, 1,548 failed, 2,483 skipped, 8 xfailed, 6 xpassed and 4 were
+interrupted. The remaining 112 IDs were explicitly blocked after a timeout in
+their file. Twelve additional modules had collection errors and are outside
+that node-ID denominator. This is not an eight-GPU CI run or an aarch64 bug count.
+
+An independent reader verified 117 original files across the initial and
+continuation archives. The [complete per-node ledger](aarch64/aarch64-unit-inventory-ledger.jsonl)
+and [summary](aarch64/aarch64-unit-inventory-summary.json) preserve every outcome.
+Failure-text categories are heuristic: 1,303 failures mention topology/world-size
+constraints, while missing assets, dependencies and other failures remain visible.
+The last pytest process emitted its final result journal and then exited with
+SIGSEGV during shutdown; the outer driver preserved this failure. An independent
+owned-process observer tracked 551 descendants and found none remaining.
+
+Dependency follow-up results are reported separately; they do not overwrite
+failures or expand this original inventory's pass count.
+
+## HybridEP virtual-expert follow-up
+
+The [two-H100 adapter record](hybridep/README.md) contains all 336 rank records,
+including SGD updates, from Draft #8388. All BF16 numerical gates passed.
+Fixed-order timings remain descriptive.

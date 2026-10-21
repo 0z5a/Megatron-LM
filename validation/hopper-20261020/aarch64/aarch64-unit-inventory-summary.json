@@ -1,0 +1,107 @@
+{
+  "source_commit": "67413f611ffb1e7d7d29cd2a61f520cffe79d995",
+  "world_size": 1,
+  "selected_non_internal": 14324,
+  "attempted_unique": 14212,
+  "counts": {
+    "failed": 1548,
+    "passed": 10163,
+    "interrupted": 4,
+    "skipped": 2483,
+    "blocked_after_file_timeout": 112,
+    "xpassed": 6,
+    "xfailed": 8
+  },
+  "failure_text_buckets": {
+    "topology_or_world_size": 1303,
+    "missing_path_or_asset": 45,
+    "dependency_or_api": 19,
+    "experimental_flag": 1,
+    "other_failure": 173,
+    "resource_limit": 7
+  },
+  "collection_error_modules": 12,
+  "collection_errors": {
+    "tests/unit_tests/distributed/mfsdp_v2/test_layout.py": {
+      "failure_text_bucket": "other_failure",
+      "detail": "import file mismatch:\nimported module 'test_layout' has this __file__ attribute:\n  <WORK_DIR>/source-67413f611/tests/unit_tests/context_parallel/test_layout.py\nwhich is not the same as the test file we want to collect:\n  <WORK_DIR>/source-67413f611/tests/unit_tests/distributed/mfsdp_v2/test_layout.py\nHINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules"
+    },
+    "tests/unit_tests/inference/engines/test_batch_invariant_mamba_prefix_caching.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/inference/engines/test_batch_invariant_mamba_prefix_caching.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/inference/engines/test_batch_invariant_mamba_prefix_caching.py:33: in <module>\n    from tests.unit_tests.models.test_gpt_model_batch_invariant import (\ntests/unit_tests/models/test_gpt_model_batch_invariant.py:29: in <module>\n    from megatron.rl.rl_utils import selective_log_softmax\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/models/test_dsa_gpt_mamba_equivalence.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/models/test_dsa_gpt_mamba_equivalence.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/models/test_dsa_gpt_mamba_equivalence.py:44: in <module>\n    from megatron.rl.rl_utils import selective_log_softmax\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/models/test_gpt_model_batch_invariant.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/models/test_gpt_model_batch_invariant.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/models/test_gpt_model_batch_invariant.py:29: in <module>\n    from megatron.rl.rl_utils import selective_log_softmax\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/rl/test_context_parallel.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/rl/test_context_parallel.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/rl/test_context_parallel.py:11: in <module>\n    from megatron.rl import rl_utils\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/rl/test_rl_batch_invariant.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/rl/test_rl_batch_invariant.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/rl/test_rl_batch_invariant.py:8: in <module>\n    from megatron.rl.rl_utils import selective_log_softmax\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/rl/test_rl_callbacks.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/rl/test_rl_callbacks.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/rl/test_rl_callbacks.py:8: in <module>\n    from megatron.rl import callbacks as rl_callbacks\nmegatron/rl/callbacks.py:5: in <module>\n    from megatron.rl import rl_utils\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/rl/test_rl_utils.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/rl/test_rl_utils.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/rl/test_rl_utils.py:50: in <module>\n    from megatron.rl import rl_utils\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/rl/test_rollout_bank.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/rl/test_rollout_bank.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/rl/test_rollout_bank.py:13: in <module>\n    from megatron.rl import rl_utils\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/rl/test_rollout_generation.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/rl/test_rollout_generation.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/rl/test_rollout_generation.py:32: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/rl/test_sequence_packing_utils.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "ImportError while importing test module '<WORK_DIR>/source-67413f611/tests/unit_tests/rl/test_sequence_packing_utils.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit_tests/rl/test_sequence_packing_utils.py:10: in <module>\n    from megatron.rl import rl_utils, sequence_packing_utils\nmegatron/rl/rl_utils.py:101: in <module>\n    from megatron.rl.inference.megatron import MegatronLocal\nmegatron/rl/inference/megatron.py:32: in <module>\n    from ..server.api import InferenceServer\nmegatron/rl/server/__init__.py:2: in <module>\n    from .inference.inference_interface_server import *\nmegatron/rl/server/inference/inference_interface_server.py:9: in <module>\n    from fastapi import FastAPI\nE   ModuleNotFoundError: No module named 'fastapi'"
+    },
+    "tests/unit_tests/transformer/test_te_layers_batch_invariant.py": {
+      "failure_text_bucket": "dependency_or_api",
+      "detail": "tests/unit_tests/transformer/test_te_layers_batch_invariant.py:39: in <module>\n    from flash_attn.cute import flash_attn_varlen_func as _fa4_varlen_func  # noqa: F401\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../venv/lib/python3.12/site-packages/flash_attn/cute/__init__.py:3: in <module>\n    from .interface import (\n../venv/lib/python3.12/site-packages/flash_attn/cute/interface.py:33: in <module>\n    from flash_attn.cute import utils\n../venv/lib/python3.12/site-packages/flash_attn/cute/utils.py:44: in <module>\n    smem: cute.Tensor, thr_mma: cute.core.ThrMma, swapAB: cutlass.Constexpr[bool] = False\n                                ^^^^^^^^^^^^^^^^\nE   AttributeError: module 'cutlass.cute.core' has no attribute 'ThrMma'"
+    }
+  },
+  "windows": [
+    {
+      "journal": "aarch64-unit-suite-20261020-v1/outcomes.jsonl",
+      "started": 197,
+      "finished": false
+    },
+    {
+      "journal": "runs/aarch64-unit-resume-20261020-v1/rounds/round-00.jsonl",
+      "started": 641,
+      "finished": false
+    },
+    {
+      "journal": "runs/aarch64-unit-resume-20261020-v1/rounds/round-01.jsonl",
+      "started": 791,
+      "finished": false
+    },
+    {
+      "journal": "runs/aarch64-unit-resume-20261020-v1/rounds/round-02.jsonl",
+      "started": 6710,
+      "finished": false
+    },
+    {
+      "journal": "runs/aarch64-unit-resume-20261020-v1/rounds/round-03.jsonl",
+      "started": 5873,
+      "finished": true
+    }
+  ],
+  "verified_original_files": 117,
+  "archives": {
+    "model-and-unit-initial.tar.gz": "6bf4732905bf2df57672ddb5ac98e2f5600880ea765063121f0bf737a1b6b72a",
+    "unit-inventory-continuation.tar.gz": "fab258c64d4f39bbe0d7ce061240fe927810d10d30ff05d10f5f5ea089ea4d12"
+  },
+  "scope": "Native aarch64 GH200 world=1 compatibility inventory, not 8-GPU CI parity. Timed-out file tails remain unexecuted. Text buckets are heuristic labels; original full outputs remain in the verified archives."
+}
